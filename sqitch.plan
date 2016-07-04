@@ -5,3 +5,4 @@
 arbschema 2016-07-04T21:44:29Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add a schema for ARchiv des Beispiels: arb.
 arbroles [arbschema] 2016-07-04T22:01:54Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add roles.
 extension [arbroles] 2016-07-04T22:25:59Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add extension.
+set_meta_on_insert [arbschema arbroles] 2016-07-04T22:48:00Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add trigger function for setting meta data on insert.
