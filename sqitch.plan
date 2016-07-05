@@ -9,3 +9,6 @@ set_meta_on_insert [arbschema arbroles] 2016-07-04T22:48:00Z Christian Lück <ch
 set_meta_on_update [arbschema arbroles] 2016-07-04T23:12:35Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add trigger function for setting meta on update.
 adjust_privilege [arbschema arbroles] 2016-07-05T15:11:04Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add functions which help with privileges.
 application [arbschema arbroles] 2016-07-09T10:05:49Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add a table for applications (tag, relation, attribute, etc.).
+language [arbschema arbroles] 2016-07-04T23:32:05Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Added a table for languages of labels and descriptions and other purposes.
+entry_type [arbschema arbroles] 2016-07-04T23:52:18Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add table for types of bibliographic entries.
+entry_type_label [arbschema arbroles entry_type language] 2016-07-04T23:30:37Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Added a table with labels and descriptions for entry types.
