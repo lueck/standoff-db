@@ -7,3 +7,4 @@ arbroles [arbschema] 2016-07-04T22:01:54Z Christian Lück <christian.lueck@ruhr-
 extension [arbroles] 2016-07-04T22:25:59Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add extension.
 set_meta_on_insert [arbschema arbroles] 2016-07-04T22:48:00Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add trigger function for setting meta data on insert.
 set_meta_on_update [arbschema arbroles] 2016-07-04T23:12:35Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add trigger function for setting meta on update.
+adjust_privilege [arbschema arbroles] 2016-07-05T15:11:04Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add functions which help with privileges.
