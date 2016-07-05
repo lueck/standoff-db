@@ -12,4 +12,4 @@ application [arbschema arbroles] 2016-07-09T10:05:49Z Christian Lück <christian
 language [arbschema arbroles] 2016-07-04T23:32:05Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Added a table for languages of labels and descriptions and other purposes.
 entry_type [arbschema arbroles] 2016-07-04T23:52:18Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add table for types of bibliographic entries.
 entry_type_label [arbschema arbroles entry_type language] 2016-07-04T23:30:37Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Added a table with labels and descriptions for entry types.
-bibliography [arbschema arbroles entry_type set_meta_on_insert set_meta_on_update] 2016-07-05T00:27:30Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add bibliography table.
+bibliography [arbschema arbroles entry_type set_meta_on_insert set_meta_on_update adjust_privilege] 2016-07-05T00:27:30Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add bibliography table.

@@ -19,6 +19,10 @@ DROP TRIGGER bibliography_set_meta_on_update ON arb.bibliography;
 
 DROP TRIGGER bibliography_set_meta_on_insert ON arb.bibliography;
 
+DROP TRIGGER adjust_privilege_on_insert ON arb.bibliography;
+
+DROP TRIGGER adjust_privilege_on_update ON arb.bibliography;
+
 DROP TABLE arb.bibliography;
 
 COMMIT;

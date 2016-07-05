@@ -4,6 +4,7 @@
 -- requires: entry_type
 -- requires: set_meta_on_insert
 -- requires: set_meta_on_update
+-- requires: adjust_privilege
 
 BEGIN;
 
@@ -29,6 +30,12 @@ CREATE TRIGGER bibliography_set_meta_on_insert BEFORE INSERT ON arb.bibliography
 
 CREATE TRIGGER bibliography_set_meta_on_update BEFORE UPDATE ON arb.bibliography
     FOR EACH ROW EXECUTE PROCEDURE arb.set_meta_on_update();
+
+CREATE TRIGGER adjust_privilege_on_insert BEFORE INSERT ON arb.bibliography
+       FOR EACH ROW EXECUTE PROCEDURE arb.adjust_privilege(484);
+
+CREATE TRIGGER adjust_privilege_on_update BEFORE UPDATE ON arb.bibliography
+       FOR EACH ROW EXECUTE PROCEDURE arb.adjust_privilege(484);
 
 -- Note: For setting a DEFAULT value for bibliography.gid alter this
 -- trigger and pass the gid as an argument to the trigger, like

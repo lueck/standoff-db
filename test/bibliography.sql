@@ -1,6 +1,6 @@
 -- Start transaction and plan the test.
 BEGIN;
-SELECT plan(57);
+SELECT plan(66);
 
 SET search_path TO arb, public;
 
@@ -84,8 +84,8 @@ SELECT is(entry_type, 'article') FROM arb.bibliography WHERE entry_key = 'Kant17
 SELECT lives_ok('INSERT INTO bibliography (entry_key, entry_type, gid, privilege) VALUES
        			(''Kant1781a'', ''book'', ''biblio_working_group'', 511),
        			(''Kant1783a'', ''book'', ''biblio_working_group'', 509),
-       			(''Kant1787a'', ''book'', ''biblio_working_group'', 509),
-			(''Kant1788a'', ''book'', ''biblio_working_group'', 509)');
+       			(''Kant1787a'', ''book'', ''biblio_working_group'', 25),
+			(''Kant1788a'', ''book'', ''biblio_working_group'', 509)'); -- 25: see below
 SELECT lives_ok('UPDATE bibliography SET (entry_type) = (''article'')
        			WHERE entry_key = ''Kant1787a''');
 SELECT is(entry_type, 'article') FROM arb.bibliography WHERE entry_key = 'Kant1787a';
@@ -165,6 +165,18 @@ SELECT is(entry_type, null) FROM arb.bibliography WHERE entry_key = 'PLogin1763'
 
 SELECT lives_ok('DELETE FROM arb.bibliography WHERE entry_key = ''Kant1781a''');
 SELECT is(entry_type, null) FROM arb.bibliography WHERE entry_key = 'Kant1781a';
+
+
+-- Privilege value of 25 = #b11001 is adjusted by trigger:
+SELECT is(privilege & 1, 1) FROM arb.bibliography WHERE entry_key = 'Kant1787a';
+SELECT is(privilege & 2, 0) FROM arb.bibliography WHERE entry_key = 'Kant1787a';
+SELECT is(privilege & 4, 4) FROM arb.bibliography WHERE entry_key = 'Kant1787a';
+SELECT is(privilege & 8, 8) FROM arb.bibliography WHERE entry_key = 'Kant1787a';
+SELECT is(privilege & 16, 16) FROM arb.bibliography WHERE entry_key = 'Kant1787a';
+SELECT is(privilege & 32, 32) FROM arb.bibliography WHERE entry_key = 'Kant1787a';
+SELECT is(privilege & 64, 64) FROM arb.bibliography WHERE entry_key = 'Kant1787a';
+SELECT is(privilege & 128, 128) FROM arb.bibliography WHERE entry_key = 'Kant1787a';
+SELECT is(privilege & 256, 256) FROM arb.bibliography WHERE entry_key = 'Kant1787a';
 
 
 -- Clean up.
