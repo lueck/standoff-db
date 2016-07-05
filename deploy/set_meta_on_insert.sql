@@ -12,7 +12,7 @@ CREATE OR REPLACE FUNCTION standoff.set_meta_on_insert()
     RETURNS TRIGGER AS $$
     BEGIN
     NEW.created_at = current_timestamp;
-    NEW.created_by = current_user;
+    NEW.created_by = coalesce(NEW.created_by, current_user);
     RETURN NEW;
     END;
     $$ language 'plpgsql';
