@@ -1,6 +1,6 @@
 -- Start transaction and plan the tests
 BEGIN;
-SELECT plan(11);
+SELECT plan(13);
 
 SELECT lives_ok('INSERT INTO arb.mimetype (id) VALUES
        			(''text/plaintext''),
@@ -31,6 +31,31 @@ SELECT is(d.id, md5('doc1')::uuid) FROM arb.document d, arb.text_document t
 
 SELECT is(source_md5, md5(text)::uuid) FROM arb.text_document
        WHERE id = md5('doc1')::uuid;
+
+
+-- md5 is unique
+SELECT throws_ok('INSERT INTO arb.text_document
+		 	(id, reference, text, mimetype)
+		 	VALUES
+		 	(md5(''docNO'')::uuid,
+			 md5(''doc1'')::uuid,
+			 ''Hallo Welt. Aus Gelsenkürchen.'',
+			 ''text/bitter'')',
+		 '23505',
+		 'duplicate key value violates unique constraint "document_source_md5_key"');
+
+-- trying to set the checksum is not successful
+SELECT throws_ok('INSERT INTO arb.text_document
+		 	(id, reference, text, source_md5, mimetype)
+		 	VALUES
+		 	(md5(''docNO'')::uuid,
+			 md5(''doc1'')::uuid,
+			 ''Hallo Welt. Aus Gelsenkürchen.'',
+			 md5(''fake'')::uuid,
+			 ''text/bitter'')',
+		 '23505',
+		 'duplicate key value violates unique constraint "document_source_md5_key"');
+
 
 -- documents other than with mimetype text/* are not show in this view:
 SELECT lives_ok('INSERT INTO arb.document
