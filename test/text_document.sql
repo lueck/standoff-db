@@ -1,6 +1,6 @@
 -- Start transaction and plan the tests
 BEGIN;
-SELECT plan(10);
+SELECT plan(11);
 
 SELECT lives_ok('INSERT INTO arb.mimetype (id) VALUES
        			(''text/plaintext''),
@@ -33,7 +33,6 @@ SELECT is(source_md5, md5(text)::uuid) FROM arb.text_document
        WHERE id = md5('doc1')::uuid;
 
 -- documents other than with mimetype text/* are not show in this view:
-SELECT todo(1);
 SELECT lives_ok('INSERT INTO arb.document
 		 	(id, reference, source_base64, mimetype)
 		 	VALUES

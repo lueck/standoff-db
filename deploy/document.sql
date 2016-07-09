@@ -59,6 +59,19 @@ CREATE TRIGGER adjust_privilege_on_update BEFORE UPDATE ON arb.document
 --       FOR EACH ROW EXECUTE PROCEDURE arb.adjust_privilege();
 
 
+CREATE FUNCTION arb.set_document_md5() RETURNS TRIGGER AS $$
+       BEGIN
+	NEW.source_md5 = coalesce(md5(decode(NEW.source_base64, 'base64'))::uuid, OLD.source_base64::uuid);
+	RETURN NEW;
+	END; $$ LANGUAGE 'plpgsql';
+
+CREATE TRIGGER set_md5_on_insert BEFORE INSERT ON arb.document
+       FOR EACH ROW EXECUTE PROCEDURE arb.set_document_md5();
+
+CREATE TRIGGER set_md5_on_update BEFORE UPDATE ON arb.document
+       FOR EACH ROW EXECUTE PROCEDURE arb.set_document_md5();
+
+
 ALTER TABLE arb.document ENABLE ROW LEVEL SECURITY;
 
 -- Note: We do bitwise AND on the integer value of privilege and then
