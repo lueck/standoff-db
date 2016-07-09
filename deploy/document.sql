@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS arb.document (
 	id uuid not null,
 	reference uuid not null references arb.bibliography,
 	-- for all types of documents
-	doc_encoded Base64 not null,
+	base64 text not null,
 	md5 uuid not null, -- md5 hash of unencoded document/file
 	mimetype varchar not null references arb.mimetype,
 	source_uri varchar,

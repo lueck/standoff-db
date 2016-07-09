@@ -4,7 +4,7 @@ BEGIN;
 
 SELECT (id,
        reference,
-       doc_encoded,
+       base64,
        md5,
        mimetype,
        source_uri,
