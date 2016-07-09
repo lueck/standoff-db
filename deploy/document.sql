@@ -12,14 +12,14 @@ BEGIN;
 CREATE TABLE IF NOT EXISTS arb.document (
 	id uuid not null,
 	reference uuid not null references arb.bibliography,
-	-- for all types of documents
-	base64 text not null,
-	md5 uuid not null, -- md5 hash of unencoded document/file
-	mimetype varchar not null references arb.mimetype,
+	source_md5 uuid not null,
+	source_base64 text not null,
 	source_uri varchar,
+	source_charset varchar,
+	mimetype varchar not null references arb.mimetype,
 	description text,
 	-- for text types
-	text_encoding varchar,
+	charset varchar,
 	text_offset integer,
 	xml_offset_xpointer varchar,
 	-- meta data for all types of documents
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS arb.document (
         gid varchar,
         privilege integer not null DEFAULT 509,
 	PRIMARY KEY (id),
-	UNIQUE (md5));
+	UNIQUE (source_md5));
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE arb.document TO arbuser, arbeditor;
 
