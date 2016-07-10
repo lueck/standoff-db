@@ -2,23 +2,23 @@
 
 BEGIN;
 
-REVOKE ALL PRIVILEGES ON arb.document FROM arbuser, arbeditor, arbadmin;
+REVOKE ALL PRIVILEGES ON standoff.document FROM standoffuser, standoffeditor, standoffadmin;
 
-DROP TRIGGER document_set_meta_on_update ON arb.document;
+DROP TRIGGER document_set_meta_on_update ON standoff.document;
 
-DROP TRIGGER document_set_meta_on_insert ON arb.document;
+DROP TRIGGER document_set_meta_on_insert ON standoff.document;
 
-DROP TRIGGER adjust_privilege_on_insert ON arb.document;
+DROP TRIGGER adjust_privilege_on_insert ON standoff.document;
 
-DROP TRIGGER adjust_privilege_on_update ON arb.document;
+DROP TRIGGER adjust_privilege_on_update ON standoff.document;
 
-DROP TRIGGER set_md5_on_insert ON arb.document;
+DROP TRIGGER set_md5_on_insert ON standoff.document;
 
-DROP TRIGGER set_md5_on_update ON arb.document;
+DROP TRIGGER set_md5_on_update ON standoff.document;
 
-DROP FUNCTION arb.set_document_md5();
+DROP FUNCTION standoff.set_document_md5();
 
-DROP TABLE arb.document;
+DROP TABLE standoff.document;
 
 
 COMMIT;

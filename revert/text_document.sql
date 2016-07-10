@@ -2,12 +2,12 @@
 
 BEGIN;
 
-DROP TRIGGER insert_text_document ON arb.text_document;
+DROP TRIGGER insert_text_document ON standoff.text_document;
 
-DROP FUNCTION arb.insert_text_document();
+DROP FUNCTION standoff.insert_text_document();
 
-REVOKE ALL PRIVILEGES ON arb.text_document FROM arbuser, arbeditor, arbadmin;
+REVOKE ALL PRIVILEGES ON standoff.text_document FROM standoffuser, standoffeditor, standoffadmin;
 
-DROP VIEW arb.text_document;
+DROP VIEW standoff.text_document;
 
 COMMIT;

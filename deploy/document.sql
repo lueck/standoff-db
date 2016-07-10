@@ -13,14 +13,14 @@
 
 BEGIN;
 
-CREATE TABLE IF NOT EXISTS arb.document (
+CREATE TABLE IF NOT EXISTS standoff.document (
 	id uuid not null,
-	reference uuid not null references arb.bibliography,
+	reference uuid not null references standoff.bibliography,
 	source_md5 uuid not null,
 	source_base64 text not null,
 	source_uri varchar,
 	source_charset varchar,
-	mimetype varchar not null references arb.mimetype,
+	mimetype varchar not null references standoff.mimetype,
 	description text,
 	-- for text types
 	charset varchar,
@@ -37,52 +37,52 @@ CREATE TABLE IF NOT EXISTS arb.document (
 	UNIQUE (source_md5));
 
 
-GRANT SELECT, INSERT, DELETE ON TABLE arb.document TO arbuser, arbeditor, arbadmin;
+GRANT SELECT, INSERT, DELETE ON TABLE standoff.document TO standoffuser, standoffeditor, standoffadmin;
 
 
 -- UPDATE on source_base64 is not allowed to anybody, until there's a mechanism to
 -- adjust the offset pointers of markup ranges.
-GRANT UPDATE (reference, source_uri, source_charset, mimetype, description, updated_at, updated_by) ON TABLE arb.document TO arbeditor, arbadmin;
+GRANT UPDATE (reference, source_uri, source_charset, mimetype, description, updated_at, updated_by) ON TABLE standoff.document TO standoffeditor, standoffadmin;
 
 
-CREATE TRIGGER document_set_meta_on_insert BEFORE INSERT ON arb.document
-    FOR EACH ROW EXECUTE PROCEDURE arb.set_meta_on_insert();
+CREATE TRIGGER document_set_meta_on_insert BEFORE INSERT ON standoff.document
+    FOR EACH ROW EXECUTE PROCEDURE standoff.set_meta_on_insert();
 
-CREATE TRIGGER document_set_meta_on_update BEFORE UPDATE ON arb.document
-    FOR EACH ROW EXECUTE PROCEDURE arb.set_meta_on_update();
+CREATE TRIGGER document_set_meta_on_update BEFORE UPDATE ON standoff.document
+    FOR EACH ROW EXECUTE PROCEDURE standoff.set_meta_on_update();
 
 
-CREATE TRIGGER adjust_privilege_on_insert BEFORE INSERT ON arb.document
-       FOR EACH ROW EXECUTE PROCEDURE arb.adjust_privilege(365);
+CREATE TRIGGER adjust_privilege_on_insert BEFORE INSERT ON standoff.document
+       FOR EACH ROW EXECUTE PROCEDURE standoff.adjust_privilege(365);
 
-CREATE TRIGGER adjust_privilege_on_update BEFORE UPDATE ON arb.document
-       FOR EACH ROW EXECUTE PROCEDURE arb.adjust_privilege(365);
+CREATE TRIGGER adjust_privilege_on_update BEFORE UPDATE ON standoff.document
+       FOR EACH ROW EXECUTE PROCEDURE standoff.adjust_privilege(365);
 
 
 -- Note: For setting a DEFAULT value for document.gid alter this
 -- trigger and pass the gid as an argument to the trigger, like
--- arb.set_gid('biblio').
+-- standoff.set_gid('biblio').
 
 -- FIXME:
---CREATE TRIGGER document_set_gid_on_insert BEFORE INSERT ON arb.document
---       FOR EACH ROW EXECUTE PROCEDURE arb.set_gid();
+--CREATE TRIGGER document_set_gid_on_insert BEFORE INSERT ON standoff.document
+--       FOR EACH ROW EXECUTE PROCEDURE standoff.set_gid();
 
 -- FIXME:
---CREATE TRIGGER document_adjust_privilege BEFORE INSERT ON arb.document
---       FOR EACH ROW EXECUTE PROCEDURE arb.adjust_privilege();
+--CREATE TRIGGER document_adjust_privilege BEFORE INSERT ON standoff.document
+--       FOR EACH ROW EXECUTE PROCEDURE standoff.adjust_privilege();
 
 
-CREATE FUNCTION arb.set_document_md5() RETURNS TRIGGER AS $$
+CREATE FUNCTION standoff.set_document_md5() RETURNS TRIGGER AS $$
        BEGIN
 	NEW.source_md5 = coalesce(md5(decode(NEW.source_base64, 'base64'))::uuid, OLD.source_base64::uuid);
 	RETURN NEW;
 	END; $$ LANGUAGE 'plpgsql';
 
-CREATE TRIGGER set_md5_on_insert BEFORE INSERT ON arb.document
-       FOR EACH ROW EXECUTE PROCEDURE arb.set_document_md5();
+CREATE TRIGGER set_md5_on_insert BEFORE INSERT ON standoff.document
+       FOR EACH ROW EXECUTE PROCEDURE standoff.set_document_md5();
 
-CREATE TRIGGER set_md5_on_update BEFORE UPDATE ON arb.document
-       FOR EACH ROW EXECUTE PROCEDURE arb.set_document_md5();
+CREATE TRIGGER set_md5_on_update BEFORE UPDATE ON standoff.document
+       FOR EACH ROW EXECUTE PROCEDURE standoff.set_document_md5();
 
 
 

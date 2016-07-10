@@ -5,7 +5,7 @@
 
 BEGIN;
 
-CREATE VIEW arb.text_document AS
+CREATE VIEW standoff.text_document AS
        SELECT
 	d.id,
 	d.reference,
@@ -22,14 +22,14 @@ CREATE VIEW arb.text_document AS
 	d.updated_by,
 	d.gid,
 	d.privilege
-	FROM arb.document d
+	FROM standoff.document d
 	WHERE d.mimetype LIKE 'text/%';
 
-GRANT INSERT, SELECT, UPDATE, DELETE ON arb.text_document TO arbuser, arbeditor;
+GRANT INSERT, SELECT, UPDATE, DELETE ON standoff.text_document TO standoffuser, standoffeditor;
 
-CREATE FUNCTION arb.insert_text_document() RETURNS TRIGGER AS $$
+CREATE FUNCTION standoff.insert_text_document() RETURNS TRIGGER AS $$
 BEGIN
-	INSERT INTO arb.document
+	INSERT INTO standoff.document
 	       (id, reference, source_md5, source_base64, source_uri, source_charset,
 	       	mimetype, description, created_at, created_by, updated_at, updated_by,
 		gid, privilege)
@@ -52,8 +52,8 @@ BEGIN
 END; $$ LANGUAGE 'plpgsql';
 
 
-CREATE TRIGGER insert_text_document INSTEAD OF INSERT ON arb.text_document
-       FOR EACH ROW EXECUTE PROCEDURE arb.insert_text_document();
+CREATE TRIGGER insert_text_document INSTEAD OF INSERT ON standoff.text_document
+       FOR EACH ROW EXECUTE PROCEDURE standoff.insert_text_document();
 		
 	       
 

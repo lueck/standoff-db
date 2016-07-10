@@ -2,8 +2,8 @@
 
 BEGIN;
 
-REVOKE ALL PRIVILEGES ON TABLE arb.mimetype FROM arbuser, arbeditor, arbadmin;
+REVOKE ALL PRIVILEGES ON TABLE standoff.mimetype FROM standoffuser, standoffeditor, standoffadmin;
 
-DROP TABLE arb.mimetype;
+DROP TABLE standoff.mimetype;
 
 COMMIT;

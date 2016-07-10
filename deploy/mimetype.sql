@@ -4,13 +4,13 @@
 
 BEGIN;
 
-CREATE TABLE arb.mimetype (
+CREATE TABLE standoff.mimetype (
        id varchar,
-       application varchar references arb.application ON DELETE SET NULL,
+       application varchar references standoff.application ON DELETE SET NULL,
        PRIMARY KEY (id));
 
-GRANT SELECT ON TABLE arb.mimetype TO arbuser, arbeditor, arbadmin;
+GRANT SELECT ON TABLE standoff.mimetype TO standoffuser, standoffeditor, standoffadmin;
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE arb.mimetype TO arbadmin;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE standoff.mimetype TO standoffadmin;
 
 COMMIT;
