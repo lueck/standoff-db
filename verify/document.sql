@@ -18,8 +18,9 @@ SELECT (id,
        privilege)
        FROM arb.document WHERE FALSE;
 
-SELECT has_table_privilege('arbuser', 'arb.document', 'SELECT, INSERT, UPDATE, DELETE');
-SELECT has_table_privilege('arbeditor', 'arb.document', 'SELECT, INSERT, UPDATE, DELETE');
+SELECT has_table_privilege('arbuser', 'arb.document', 'SELECT, INSERT, DELETE');
+SELECT has_table_privilege('arbuser', 'arb.document', 'UPDATE');
+SELECT has_table_privilege('arbeditor', 'arb.document', 'SELECT, INSERT, DELETE');
 
 SELECT 1/count(tgname) FROM pg_trigger t
        WHERE NOT tgisinternal

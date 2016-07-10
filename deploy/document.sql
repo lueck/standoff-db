@@ -7,6 +7,10 @@
 -- requires: set_meta_on_update
 -- requires: extension
 
+-- Note: privilege value 365 is #o555, r_xr_xr_x. Update is not
+-- allowed to anyone until there's a mechanism for updating the offset
+-- pointers of markup ranges.
+
 BEGIN;
 
 CREATE TABLE IF NOT EXISTS arb.document (
@@ -28,11 +32,18 @@ CREATE TABLE IF NOT EXISTS arb.document (
         updated_at timestamp,
         updated_by varchar,
         gid varchar,
-        privilege integer not null DEFAULT 509,
+        privilege integer not null DEFAULT 365,
 	PRIMARY KEY (id),
 	UNIQUE (source_md5));
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE arb.document TO arbuser, arbeditor;
+
+GRANT SELECT, INSERT, DELETE ON TABLE arb.document TO arbuser, arbeditor, arbadmin;
+
+
+-- UPDATE on source_base64 is not allowed to anybody, until there's a mechanism to
+-- adjust the offset pointers of markup ranges.
+GRANT UPDATE (reference, source_uri, source_charset, mimetype, description, updated_at, updated_by) ON TABLE arb.document TO arbeditor, arbadmin;
+
 
 CREATE TRIGGER document_set_meta_on_insert BEFORE INSERT ON arb.document
     FOR EACH ROW EXECUTE PROCEDURE arb.set_meta_on_insert();
@@ -40,11 +51,13 @@ CREATE TRIGGER document_set_meta_on_insert BEFORE INSERT ON arb.document
 CREATE TRIGGER document_set_meta_on_update BEFORE UPDATE ON arb.document
     FOR EACH ROW EXECUTE PROCEDURE arb.set_meta_on_update();
 
+
 CREATE TRIGGER adjust_privilege_on_insert BEFORE INSERT ON arb.document
-       FOR EACH ROW EXECUTE PROCEDURE arb.adjust_privilege(484);
+       FOR EACH ROW EXECUTE PROCEDURE arb.adjust_privilege(365);
 
 CREATE TRIGGER adjust_privilege_on_update BEFORE UPDATE ON arb.document
-       FOR EACH ROW EXECUTE PROCEDURE arb.adjust_privilege(484);
+       FOR EACH ROW EXECUTE PROCEDURE arb.adjust_privilege(365);
+
 
 -- Note: For setting a DEFAULT value for document.gid alter this
 -- trigger and pass the gid as an argument to the trigger, like
@@ -72,43 +85,5 @@ CREATE TRIGGER set_md5_on_update BEFORE UPDATE ON arb.document
        FOR EACH ROW EXECUTE PROCEDURE arb.set_document_md5();
 
 
-ALTER TABLE arb.document ENABLE ROW LEVEL SECURITY;
-
--- Note: We do bitwise AND on the integer value of privilege and then
--- test if it equals the bitmask. privilege & 16 = 16 is the same as
--- privilege & (1<<4) = (1<<4), which may be more readable. For
--- performance reasons we replace (1<<4) with the count itself.
-
-CREATE POLICY allow_select ON arb.document FOR SELECT
-USING (true);
-
-CREATE POLICY assert_well_formed ON arb.document FOR INSERT TO arbuser
-WITH CHECK (created_by = current_user);
-
-CREATE POLICY assert_well_formed_null ON arb.document FOR INSERT TO arbuser
-WITH CHECK (created_by is null); -- if null, then is set to
-				 -- current_user by trigger.
-
-CREATE POLICY allow_insert_to_arbeditor ON arb.document FOR INSERT TO arbeditor
-WITH CHECK (true);
-
-CREATE POLICY allow_update_to_creator ON arb.document FOR UPDATE TO arbuser
-USING (created_by = current_user);
-
-CREATE POLICY allow_update_to_group_member ON arb.document FOR UPDATE TO arbuser
-USING ((privilege & 16) = 16
-        AND pg_has_role(gid, 'MEMBER'));
-
-CREATE POLICY allow_update_to_others ON arb.document FOR UPDATE TO arbuser
-USING (privilege & 2 = 2);
-
-CREATE POLICY allow_update_to_arbeditor ON arb.document FOR UPDATE TO arbeditor
-USING (true);
-
-CREATE POLICY allow_delete_to_creator ON arb.document FOR DELETE TO arbuser
-USING (created_by = current_user);
-
-CREATE POLICY allow_delete_to_arbeditor ON arb.document FOR DELETE TO arbeditor
-USING (true);
 
 COMMIT;
