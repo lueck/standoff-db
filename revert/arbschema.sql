@@ -2,6 +2,6 @@
 
 BEGIN;
 
-DROP SCHEMA arb;
+DROP SCHEMA standoff;
 
 COMMIT;

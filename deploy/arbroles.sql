@@ -3,11 +3,11 @@
 
 BEGIN;
 
-CREATE ROLE arbuser NOLOGIN NOINHERIT;
-CREATE ROLE arbeditor NOLOGIN NOINHERIT;
-CREATE ROLE arbadmin NOLOGIN NOINHERIT CREATEROLE;
+CREATE ROLE standoffuser NOLOGIN NOINHERIT;
+CREATE ROLE standoffeditor NOLOGIN NOINHERIT;
+CREATE ROLE standoffadmin NOLOGIN NOINHERIT CREATEROLE;
 
-GRANT USAGE ON SCHEMA arb TO arbuser, arbeditor, arbadmin;
-GRANT SELECT ON ALL TABLES IN SCHEMA arb TO arbuser, arbeditor, arbadmin;
+GRANT USAGE ON SCHEMA standoff TO standoffuser, standoffeditor, standoffadmin;
+GRANT SELECT ON ALL TABLES IN SCHEMA standoff TO standoffuser, standoffeditor, standoffadmin;
 
 COMMIT;

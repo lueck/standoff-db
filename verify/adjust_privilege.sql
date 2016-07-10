@@ -2,11 +2,11 @@
 
 BEGIN;
 
-SELECT 'arb.adjust_privilege'::regproc;
+SELECT 'standoff.adjust_privilege'::regproc;
 
-SELECT pg_catalog.has_function_privilege('arbuser', 'arb.adjust_privilege()', 'EXECUTE');
-SELECT pg_catalog.has_function_privilege('arbeditor', 'arb.adjust_privilege()', 'EXECUTE');
-SELECT pg_catalog.has_function_privilege('arbadmin', 'arb.adjust_privilege()', 'EXECUTE');
+SELECT pg_catalog.has_function_privilege('standoffuser', 'standoff.adjust_privilege()', 'EXECUTE');
+SELECT pg_catalog.has_function_privilege('standoffeditor', 'standoff.adjust_privilege()', 'EXECUTE');
+SELECT pg_catalog.has_function_privilege('standoffadmin', 'standoff.adjust_privilege()', 'EXECUTE');
 
 
 ROLLBACK;

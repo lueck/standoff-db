@@ -2,6 +2,6 @@
 
 BEGIN;
 
-DROP FUNCTION arb.set_meta_on_update();
+DROP FUNCTION standoff.set_meta_on_update();
 
 COMMIT;

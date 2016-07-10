@@ -2,10 +2,10 @@
 
 BEGIN;
 
-SELECT (id, description) FROM arb.application WHERE FALSE;
+SELECT (id, description) FROM standoff.application WHERE FALSE;
 
-SELECT has_table_privilege('arbuser', 'arb.application', 'SELECT');
-SELECT has_table_privilege('arbeditor', 'arb.application', 'SELECT');
-SELECT has_table_privilege('arbadmin', 'arb.application', 'SELECT, INSERT, UPDATE, DELETE');
+SELECT has_table_privilege('standoffuser', 'standoff.application', 'SELECT');
+SELECT has_table_privilege('standoffeditor', 'standoff.application', 'SELECT');
+SELECT has_table_privilege('standoffadmin', 'standoff.application', 'SELECT, INSERT, UPDATE, DELETE');
 
 ROLLBACK;

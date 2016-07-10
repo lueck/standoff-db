@@ -2,6 +2,6 @@
 
 BEGIN;
 
-DROP FUNCTION arb.adjust_privilege();
+DROP FUNCTION standoff.adjust_privilege();
 
 COMMIT;

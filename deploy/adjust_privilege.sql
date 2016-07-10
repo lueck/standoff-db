@@ -9,7 +9,7 @@
 
 BEGIN;
 
-CREATE FUNCTION arb.adjust_privilege()
+CREATE FUNCTION standoff.adjust_privilege()
        RETURNS TRIGGER AS $$
        BEGIN
        NEW.privilege = coalesce(NEW.privilege | coalesce(TG_ARGV[0]::integer, 0),

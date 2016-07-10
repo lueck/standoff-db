@@ -14,10 +14,10 @@ CREATE TABLE IF NOT EXISTS meta_data (
 	);
 
 CREATE TRIGGER adjust_privilege_on_insert BEFORE INSERT ON meta_data
-    FOR EACH ROW EXECUTE PROCEDURE arb.adjust_privilege(484);
+    FOR EACH ROW EXECUTE PROCEDURE standoff.adjust_privilege(484);
 
 CREATE TRIGGER adjust_privilege_on_update BEFORE UPDATE ON meta_data
-    FOR EACH ROW EXECUTE PROCEDURE arb.adjust_privilege(484);
+    FOR EACH ROW EXECUTE PROCEDURE standoff.adjust_privilege(484);
 
 -- Run the tests.
 INSERT INTO meta_data (a_number, privilege) VALUES (1, 320);

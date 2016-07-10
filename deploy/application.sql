@@ -4,13 +4,13 @@
 
 BEGIN;
 
-CREATE TABLE arb.application (
+CREATE TABLE standoff.application (
        id varchar not null,
        description text,
        PRIMARY KEY (id));
 
-GRANT SELECT ON TABLE arb.application TO arbuser, arbeditor, arbadmin;
+GRANT SELECT ON TABLE standoff.application TO standoffuser, standoffeditor, standoffadmin;
 
-GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE arb.application TO arbadmin;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE standoff.application TO standoffadmin;
 
 COMMIT;

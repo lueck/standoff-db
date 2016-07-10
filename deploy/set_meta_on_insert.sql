@@ -8,7 +8,7 @@
 
 BEGIN;
 
-CREATE OR REPLACE FUNCTION arb.set_meta_on_insert()
+CREATE OR REPLACE FUNCTION standoff.set_meta_on_insert()
     RETURNS TRIGGER AS $$
     BEGIN
     NEW.created_at = current_timestamp;

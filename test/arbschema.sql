@@ -2,7 +2,7 @@
 BEGIN;
 SELECT plan(1);
 
-SELECT has_schema('arb');
+SELECT has_schema('standoff');
 
 -- Clean up.
 SELECT finish();

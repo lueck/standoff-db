@@ -19,11 +19,11 @@ CREATE TABLE IF NOT EXISTS meta_data (
 
 SELECT lives_ok('
 CREATE TRIGGER meta_data_set_meta_on_insert BEFORE INSERT ON meta_data
-    FOR EACH ROW EXECUTE PROCEDURE arb.set_meta_on_insert()');
+    FOR EACH ROW EXECUTE PROCEDURE standoff.set_meta_on_insert()');
 
 SELECT lives_ok('
 CREATE TRIGGER meta_data_set_meta_on_upate BEFORE UPDATE ON meta_data
-    FOR EACH ROW EXECUTE PROCEDURE arb.set_meta_on_update()');
+    FOR EACH ROW EXECUTE PROCEDURE standoff.set_meta_on_update()');
 
 -- Run the tests.
 INSERT INTO meta_data (a_number) VALUES (1);

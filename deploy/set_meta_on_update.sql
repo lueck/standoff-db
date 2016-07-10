@@ -4,7 +4,7 @@
 
 BEGIN;
 
-CREATE FUNCTION arb.set_meta_on_update()
+CREATE FUNCTION standoff.set_meta_on_update()
     RETURNS TRIGGER AS $$
     BEGIN
     NEW.updated_at = current_timestamp;
