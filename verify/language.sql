@@ -2,6 +2,6 @@
 
 BEGIN;
 
-SELECT (id) FROM arb.language WHERE FALSE;
+SELECT (id) FROM standoff.language WHERE FALSE;
 
 ROLLBACK;

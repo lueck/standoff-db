@@ -6,14 +6,14 @@
 
 BEGIN;
 
-CREATE TABLE arb.entry_type_label (
-       entry_type varchar(20) not null references arb.entry_type,
-       language varchar not null references arb.language,
+CREATE TABLE standoff.entry_type_label (
+       entry_type varchar(20) not null references standoff.entry_type,
+       language varchar not null references standoff.language,
        label text not null,
        description text,
        UNIQUE (entry_type, language));
 
-INSERT INTO arb.entry_type_label
+INSERT INTO standoff.entry_type_label
        (language, entry_type, label, description) VALUES
 
 ('en', 'article', 'Article in a Journal or Newspaper', 'An article in a journal, magazine, newspaper, or other periodical which forms a self-contained unit with its own title. The title of the periodical is given in the journaltitle field. If the issue has its own title in addition to the main title of the periodical, it goes in the issuetitle field. Note that editor and related fields refer to the journal while translator and related fields refer to the article.'),

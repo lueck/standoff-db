@@ -2,6 +2,6 @@
 
 BEGIN;
 
-DROP TABLE arb.language;
+DROP TABLE standoff.language;
 
 COMMIT;

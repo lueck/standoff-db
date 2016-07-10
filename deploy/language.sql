@@ -4,11 +4,11 @@
 
 BEGIN;
 
-CREATE TABLE arb.language (
+CREATE TABLE standoff.language (
        id varchar not null, -- abbrev: like en, de, fr
        PRIMARY KEY (id));
 
-INSERT INTO arb.language VALUES
+INSERT INTO standoff.language VALUES
        ('en'),
        ('de'),
        ('fr'),

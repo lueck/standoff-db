@@ -10,6 +10,6 @@ CREATE ROLE standoffadmin NOLOGIN NOINHERIT CREATEROLE;
 GRANT USAGE ON SCHEMA standoff TO standoffuser, standoffeditor, standoffadmin;
 GRANT SELECT ON ALL TABLES IN SCHEMA standoff TO standoffuser, standoffeditor, standoffadmin;
 
-GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA arb TO arbadmin;
+GRANT ALL PRIVILEGES ON ALL TABLES IN SCHEMA standoff TO standoffadmin;
 
 COMMIT;

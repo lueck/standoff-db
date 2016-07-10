@@ -3,6 +3,6 @@
 BEGIN;
 
 SELECT (entry_type, language, label, description)
-FROM arb.entry_type_label WHERE FALSE;
+FROM standoff.entry_type_label WHERE FALSE;
 
 ROLLBACK;

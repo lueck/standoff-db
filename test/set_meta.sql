@@ -2,7 +2,7 @@
 BEGIN;
 SELECT plan(10);
 
-SET search_path TO arb, public;
+SET search_path TO standoff, public;
 
 -- Setup.
 CREATE TABLE IF NOT EXISTS meta_data (

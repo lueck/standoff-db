@@ -2,6 +2,6 @@
 
 BEGIN;
 
-DROP TABLE arb.entry_type_label;
+DROP TABLE standoff.entry_type_label;
 
 COMMIT;

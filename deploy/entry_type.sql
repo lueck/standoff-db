@@ -4,11 +4,11 @@
 
 BEGIN;
 
-CREATE TABLE IF NOT EXISTS arb.entry_type (
+CREATE TABLE IF NOT EXISTS standoff.entry_type (
         id varchar(20) not null,
         PRIMARY KEY (id));
 
-INSERT INTO arb.entry_type VALUES
+INSERT INTO standoff.entry_type VALUES
        ('article'),
        ('book'),
        ('mvbook'),
