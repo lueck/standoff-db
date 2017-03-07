@@ -87,5 +87,44 @@ CREATE TRIGGER set_md5_on_update BEFORE UPDATE ON standoff.document
        FOR EACH ROW EXECUTE PROCEDURE standoff.set_document_md5();
 
 
+ALTER TABLE standoff.document ENABLE ROW LEVEL SECURITY;
+
+-- Note: We do bitwise AND on the integer value of privilege and then
+-- test if it equals the bitmask. privilege & 16 = 16 is the same as
+-- privilege & (1<<4) = (1<<4), which may be more readable. For
+-- performance reasons we replace (1<<4) with the count itself.
+
+CREATE POLICY allow_select ON standoff.document FOR SELECT
+USING (true);
+
+CREATE POLICY assert_well_formed ON standoff.document FOR INSERT TO standoffuser
+WITH CHECK (created_by = current_user);
+
+CREATE POLICY assert_well_formed_null ON standoff.document FOR INSERT TO standoffuser
+WITH CHECK (created_by is null); -- if null, then is set to
+				 -- current_user by trigger.
+
+CREATE POLICY allow_insert_to_standoffeditor ON standoff.document FOR INSERT TO standoffeditor
+WITH CHECK (true);
+
+CREATE POLICY allow_update_to_creator ON standoff.document FOR UPDATE TO standoffuser
+USING (created_by = current_user);
+
+CREATE POLICY allow_update_to_group_member ON standoff.document FOR UPDATE TO standoffuser
+USING ((privilege & 16) = 16
+        AND pg_has_role(gid, 'MEMBER'));
+
+CREATE POLICY allow_update_to_others ON standoff.document FOR UPDATE TO standoffuser
+USING (privilege & 2 = 2);
+
+CREATE POLICY allow_update_to_standoffeditor ON standoff.document FOR UPDATE TO standoffeditor
+USING (true);
+
+CREATE POLICY allow_delete_to_creator ON standoff.document FOR DELETE TO standoffuser
+USING (created_by = current_user);
+
+CREATE POLICY allow_delete_to_standoffeditor ON standoff.document FOR DELETE TO standoffeditor
+USING (true);
+
 
 COMMIT;
