@@ -4,6 +4,8 @@ BEGIN;
 
 REVOKE ALL PRIVILEGES ON standoff.document FROM standoffuser, standoffeditor, standoffadmin;
 
+REVOKE ALL PRIVILEGES ON standoff.document_id_seq FROM standoffuser, standoffeditor, standoffadmin;
+
 DROP TRIGGER document_set_meta_on_update ON standoff.document;
 
 DROP TRIGGER document_set_meta_on_insert ON standoff.document;

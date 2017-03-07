@@ -21,20 +21,18 @@ RESET ROLE;
 SET ROLE testingbob;
 
 SELECT lives_ok('INSERT INTO standoff.document
-		 	(id, reference, source_base64, mimetype)
+		 	(reference, source_base64, mimetype)
 		 	VALUES
-		 	(md5(''doc1'')::uuid,
-			 md5(''bib1'')::uuid,
+		 	(md5(''bib1'')::uuid,
 			 encode(''Hallo Welt. Grüße!'', ''base64''),
 			 ''text/plaintext'')');
 
 -- the md5 hash of the content, i.e. decode(source_base64, 'base64')
 -- is unique.
 SELECT throws_ok('INSERT INTO standoff.document
-		 	 (id, reference, source_base64, mimetype)
+		 	 (reference, source_base64, mimetype)
 		 	 VALUES
-		 	 (md5(''doc2'')::uuid,
-			  md5(''bib1'')::uuid,
+		 	 (md5(''bib1'')::uuid,
 			  encode(''Hallo Welt. Grüße!'', ''base64''),
 			  ''text/plaintext'')',
 			  '23505',
@@ -42,10 +40,9 @@ SELECT throws_ok('INSERT INTO standoff.document
 
 -- trying to insert non-base64 encoded value:
 SELECT throws_ok('INSERT INTO standoff.document
-		 	 (id, reference, source_base64, mimetype)
+		 	 (reference, source_base64, mimetype)
 		 	 VALUES
-		 	 (md5(''doc2'')::uuid,
-			  md5(''bib1'')::uuid,
+		 	 (md5(''bib1'')::uuid,
 			  ''BAD VALUE!'',
 			  ''text/plaintext'')',
 			  '22023',
@@ -53,13 +50,13 @@ SELECT throws_ok('INSERT INTO standoff.document
 
 -- we can't update source_base64
 SELECT throws_ok('UPDATE standoff.document SET (source_base64) = (encode(''Changed!'', ''base64''))
-       				     WHERE id = md5(''doc1'')::uuid',
+       				     WHERE id = currval(''standoff.document_id_seq'')',
 		 '42501',
 		 'permission denied for relation document');
 
 -- standoffusers can't update
 SELECT throws_ok('UPDATE standoff.document SET (source_charset) = (''utf-8'')
-       				     WHERE id = md5(''doc1'')::uuid',
+       				     WHERE id = currval(''standoff.document_id_seq'')',
 		 '42501',
 		 'permission denied for relation document');
 
@@ -68,7 +65,7 @@ SET ROLE testingsid;
 
 -- standoffeditors (and standoffadmins) can update
 SELECT lives_ok('UPDATE standoff.document SET (source_charset) = (''utf-8'')
-       				     WHERE id = md5(''doc1'')::uuid');
+       				     WHERE id = currval(''standoff.document_id_seq'')');
 
 
 -- Finish the tests and clean up.

@@ -10,6 +10,7 @@ SELECT (id,
        source_charset,
        mimetype,
        description,
+       plaintext,
        created_at,
        created_by,
        updated_at,
@@ -21,6 +22,10 @@ SELECT (id,
 SELECT has_table_privilege('standoffuser', 'standoff.document', 'SELECT, INSERT, DELETE');
 SELECT has_table_privilege('standoffuser', 'standoff.document', 'UPDATE');
 SELECT has_table_privilege('standoffeditor', 'standoff.document', 'SELECT, INSERT, DELETE');
+
+SELECT has_sequence_privilege('standoffuser', 'standoff.document_id_seq', 'SELECT, UPDATE');
+SELECT has_sequence_privilege('standoffeditor', 'standoff.document_id_seq', 'SELECT, UPDATE');
+SELECT has_sequence_privilege('standoffadmin', 'standoff.document_id_seq', 'SELECT, UPDATE');
 
 SELECT 1/count(tgname) FROM pg_trigger t
        WHERE NOT tgisinternal

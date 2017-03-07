@@ -14,7 +14,7 @@
 BEGIN;
 
 CREATE TABLE IF NOT EXISTS standoff.document (
-	id uuid not null,
+	id serial not null,
 	reference uuid not null references standoff.bibliography,
 	source_md5 uuid not null,
 	source_base64 text not null,
@@ -22,10 +22,11 @@ CREATE TABLE IF NOT EXISTS standoff.document (
 	source_charset varchar,
 	mimetype varchar not null references standoff.mimetype,
 	description text,
+	plaintext text, -- plain text like text layer in TCF
 	-- for text types
-	charset varchar,
-	text_offset integer,
-	xml_offset_xpointer varchar,
+	charset varchar, -- character set of source
+	text_offset integer, -- FIXME: needed?
+	xml_offset_xpointer varchar, -- FIXME: needed?
 	-- meta data for all types of documents
         created_at timestamp not null,
         created_by varchar not null,
@@ -39,6 +40,7 @@ CREATE TABLE IF NOT EXISTS standoff.document (
 
 GRANT SELECT, INSERT, DELETE ON TABLE standoff.document TO standoffuser, standoffeditor, standoffadmin;
 
+GRANT SELECT, USAGE ON SEQUENCE standoff.document_id_seq TO standoffuser, standoffeditor, standoffadmin;
 
 -- UPDATE on source_base64 is not allowed to anybody, until there's a mechanism to
 -- adjust the offset pointers of markup ranges.

@@ -1,6 +1,6 @@
 -- Start transaction and plan the tests
 BEGIN;
-SELECT plan(17);
+SELECT plan(16);
 
 SELECT lives_ok('INSERT INTO standoff.mimetype (id) VALUES
        			(''text/plaintext''),
@@ -13,32 +13,30 @@ SELECT lives_ok('INSERT INTO standoff.bibliography (id, entry_key, entry_type) V
        			(md5(''doc1'')::uuid, ''KantKdU'', ''book'')');
 
 SELECT lives_ok('INSERT INTO standoff.text_document
-		 	(id, reference, text, mimetype)
+		 	(reference, text, mimetype)
 		 	VALUES
 		 	(md5(''doc1'')::uuid,
-			 md5(''doc1'')::uuid,
 			 ''Hallo Welt. Grüße!'',
 			 ''text/plaintext'')');
 
 SELECT is(source_base64, encode('Hallo Welt. Grüße!', 'base64'))
-       FROM standoff.document WHERE id = md5('doc1')::uuid;
+       FROM standoff.document WHERE id = currval('standoff.document_id_seq');
 
 SELECT is(decode(source_base64, 'base64'), 'Hallo Welt. Grüße!')
-       FROM standoff.document WHERE id = md5('doc1')::uuid;
+       FROM standoff.document WHERE id = currval('standoff.document_id_seq');
 
-SELECT is(d.id, md5('doc1')::uuid) FROM standoff.document d, standoff.text_document t
+SELECT is(d.id, currval('standoff.document_id_seq')::integer) FROM standoff.document d, standoff.text_document t
        WHERE decode(d.source_base64, 'base64') = t.text;
 
 SELECT is(source_md5, md5(text)::uuid) FROM standoff.text_document
-       WHERE id = md5('doc1')::uuid;
+       WHERE id = currval('standoff.document_id_seq');
 
 
 -- md5 is unique
 SELECT throws_ok('INSERT INTO standoff.text_document
-		 	(id, reference, text, mimetype)
+		 	(reference, text, mimetype)
 		 	VALUES
-		 	(md5(''docNO'')::uuid,
-			 md5(''doc1'')::uuid,
+		 	(md5(''doc1'')::uuid,
 			 ''Hallo Welt. Grüße!'',
 			 ''text/bitter'')',
 		 '23505',
@@ -46,10 +44,9 @@ SELECT throws_ok('INSERT INTO standoff.text_document
 
 -- trying to set the checksum is not successful
 SELECT throws_ok('INSERT INTO standoff.text_document
-		 	(id, reference, text, source_md5, mimetype)
+		 	(reference, text, source_md5, mimetype)
 		 	VALUES
-		 	(md5(''docNO'')::uuid,
-			 md5(''doc1'')::uuid,
+		 	(md5(''doc1'')::uuid,
 			 ''Hallo Welt. Grüße!'',
 			 md5(''fake'')::uuid,
 			 ''text/bitter'')',
@@ -59,10 +56,9 @@ SELECT throws_ok('INSERT INTO standoff.text_document
 
 -- documents other than with mimetype text/* are not shown in this view:
 SELECT lives_ok('INSERT INTO standoff.document
-		 	(id, reference, source_base64, mimetype)
+		 	(reference, source_base64, mimetype)
 		 	VALUES
-		 	(md5(''doc2'')::uuid,
-			 md5(''doc1'')::uuid,
+		 	(md5(''doc1'')::uuid,
 			 ''abcdef12'',
 			 ''application/failure'')');
 
@@ -75,19 +71,19 @@ SELECT is(source_md5, md5(decode(source_base64, 'base64'))::uuid) FROM standoff.
 
 -- we can't update column text
 SELECT throws_ok('UPDATE standoff.text_document SET (text) = (''Hello world!'')
-       					  WHERE id = md5(''doc1'')::uuid',
+       					  WHERE id = currval(''standoff.document_id_seq'')',
 		 '0A000',
 		 'cannot update column "text" of view "text_document"');
 
 -- but we can update other columns
 SELECT lives_ok('UPDATE standoff.text_document SET (source_charset) = (''UTF8'')
-       					  WHERE id = md5(''doc1'')::uuid');
+       					  WHERE id = currval(''standoff.document_id_seq'')');
 
 -- setting source_md5 to an arbitrary value is not successful
 SELECT lives_ok('UPDATE standoff.text_document SET (source_md5) = (md5(''UTF8'')::uuid)
-       					  WHERE id = md5(''doc1'')::uuid');
+       					  WHERE id = currval(''standoff.document_id_seq'')');
 SELECT is(source_md5, md5('Hallo Welt. Grüße!')::uuid) FROM standoff.text_document
-       WHERE id = md5('doc1')::uuid;
+       WHERE id = currval('standoff.document_id_seq');
 
 
 -- Finish the tests and clean up.

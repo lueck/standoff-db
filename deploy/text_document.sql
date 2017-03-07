@@ -15,6 +15,7 @@ CREATE VIEW standoff.text_document AS
 	d.source_charset,
 	d.mimetype,
 	d.description,
+	d.plaintext,
 	decode(d.source_base64, 'base64') AS text,
 	d.created_at,
 	d.created_by,
@@ -30,18 +31,19 @@ GRANT INSERT, SELECT, UPDATE, DELETE ON standoff.text_document TO standoffuser, 
 CREATE FUNCTION standoff.insert_text_document() RETURNS TRIGGER AS $$
 BEGIN
 	INSERT INTO standoff.document
-	       (id, reference, source_md5, source_base64, source_uri, source_charset,
-	       	mimetype, description, created_at, created_by, updated_at, updated_by,
+	       (reference, source_md5, source_base64, source_uri, source_charset,
+	       	mimetype, description, plaintext,
+		created_at, created_by, updated_at, updated_by,
 		gid, privilege)
 		VALUES 
-	       (coalesce(NEW.id, uuid_generate_v1()),
-	       	NEW.reference,
+	       (NEW.reference,
 		md5(NEW.text)::uuid,
 		encode(NEW.text, 'base64'),
 		NEW.source_uri,
 		NEW.source_charset,
 		NEW.mimetype,
 		NEW.description,
+		NEW.plaintext,
 		NEW.created_at,
 		NEW.created_by,
 		NEW.updated_at,
