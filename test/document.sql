@@ -3,9 +3,14 @@ BEGIN;
 --SELECT plan(1);
 SELECT * FROM no_plan();
 
+-- we drop these triggers because of currval within transaction.
+DROP TRIGGER IF EXISTS create_document_corpus ON standoff.document;
+DROP TRIGGER IF EXISTS add_document_to_global_corpus ON standoff.document;
+
 SELECT lives_ok('INSERT INTO standoff.mimetype (id) VALUES
        			(''text/plaintext''),
-			(''application/failure'')');
+			(''application/failure'')
+			ON CONFLICT DO NOTHING');
 
 SELECT lives_ok('INSERT INTO standoff.bibliography (id, entry_key, entry_type) VALUES
        			(md5(''bib1'')::uuid, ''bib1'', ''book'')');

@@ -2,9 +2,14 @@
 BEGIN;
 SELECT plan(16);
 
+-- we drop these triggers because of currval within transaction.
+DROP TRIGGER IF EXISTS create_document_corpus ON standoff.document;
+DROP TRIGGER IF EXISTS add_document_to_global_corpus ON standoff.document;
+
 SELECT lives_ok('INSERT INTO standoff.mimetype (id) VALUES
        			(''text/plaintext''),
-			(''application/failure'')');
+			(''application/failure'')
+			ON CONFLICT DO NOTHING');
 
 RESET ROLE;
 SET ROLE standoffuser;
@@ -26,7 +31,7 @@ SELECT is(decode(source_base64, 'base64'), 'Hallo Welt. Grüße!')
        FROM standoff.document WHERE id = currval('standoff.document_id_seq');
 
 SELECT is(d.id, currval('standoff.document_id_seq')::integer) FROM standoff.document d, standoff.text_document t
-       WHERE decode(d.source_base64, 'base64') = t.text;
+       WHERE decode(d.source_base64, 'base64') = t.text AND t.text = 'Hallo Welt. Grüße!';
 
 SELECT is(source_md5, md5(text)::uuid) FROM standoff.text_document
        WHERE id = currval('standoff.document_id_seq');
@@ -62,12 +67,12 @@ SELECT lives_ok('INSERT INTO standoff.document
 			 ''abcdef12'',
 			 ''application/failure'')');
 
-SELECT is(count(id)::integer, 1) FROM standoff.text_document WHERE TRUE;
+SELECT is(count(id)::integer, 0) FROM standoff.text_document WHERE id = currval('standoff.document_id_seq');
 
 
 -- md5 sums are correct, everywhere in standoff.document
 SELECT is(source_md5, md5(decode(source_base64, 'base64'))::uuid) FROM standoff.document
-       WHERE TRUE;
+       WHERE id = currval('standoff.document_id_seq');
 
 -- we can't update column text
 SELECT throws_ok('UPDATE standoff.text_document SET (text) = (''Hello world!'')
@@ -82,8 +87,9 @@ SELECT lives_ok('UPDATE standoff.text_document SET (source_charset) = (''UTF8'')
 -- setting source_md5 to an arbitrary value is not successful
 SELECT lives_ok('UPDATE standoff.text_document SET (source_md5) = (md5(''UTF8'')::uuid)
        					  WHERE id = currval(''standoff.document_id_seq'')');
+
 SELECT is(source_md5, md5('Hallo Welt. Grüße!')::uuid) FROM standoff.text_document
-       WHERE id = currval('standoff.document_id_seq');
+       WHERE text = 'Hallo Welt. Grüße!';
 
 
 -- Finish the tests and clean up.
