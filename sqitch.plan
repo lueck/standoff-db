@@ -17,3 +17,4 @@ mimetype [arbschema arbroles application] 2016-07-09T09:17:28Z Christian Lück <
 document [bibliography mimetype arbschema arbroles adjust_privilege set_meta_on_insert set_meta_on_update extension] 2016-07-09T07:58:31Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Added document table.
 text_document [document arbschema arbroles] 2016-07-09T20:45:45Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add view for text documents.
 corpus [arbschema arbroles document adjust_privilege set_meta_on_insert set_meta_on_update extension] 2017-03-07T20:38:02Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add corpus table and triggers.
+corpus_document [document corpus] 2017-03-07T23:15:50Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add a crossing table for making a document belong to a corpus.
