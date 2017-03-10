@@ -15,7 +15,7 @@ BEGIN;
 
 CREATE TABLE IF NOT EXISTS standoff.document (
 	id serial not null,
-	reference uuid not null references standoff.bibliography,
+	reference uuid references standoff.bibliography, -- may be null!
 	source_md5 uuid not null,
 	source_base64 text not null,
 	source_uri varchar,
