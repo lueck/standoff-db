@@ -6,7 +6,7 @@
 BEGIN;
 
 CREATE TABLE IF NOT EXISTS standoff.token (
-       document integer not null references standoff.document ON DELETE CASCADE,
+       document integer not null references standoff.document, -- ON DELETE CASCADE,
        number integer not null,
        token text not null,
        source_start integer,
@@ -17,5 +17,18 @@ CREATE TABLE IF NOT EXISTS standoff.token (
 
 GRANT SELECT, INSERT ON TABLE standoff.token TO standoffuser, standoffeditor, standoffadmin;
 GRANT DELETE, UPDATE ON TABLE standoff.token TO standoffeditor, standoffadmin;
+
+CREATE OR REPLACE FUNCTION standoff.delete_token()
+       RETURNS TRIGGER AS $$
+       BEGIN
+       DELETE FROM standoff.token
+       WHERE document = OLD.id;
+       RETURN OLD;
+       END;
+       $$ LANGUAGE plpgsql
+       SECURITY DEFINER;
+
+CREATE TRIGGER delete_on_document_delete BEFORE DELETE ON standoff.document
+       FOR EACH ROW EXECUTE PROCEDURE standoff.delete_token();
 
 COMMIT;
