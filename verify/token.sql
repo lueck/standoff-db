@@ -5,6 +5,7 @@ BEGIN;
 SELECT (document,
        number,
        token,
+       lemma,
        source_start,
        source_end,
        text_start,
