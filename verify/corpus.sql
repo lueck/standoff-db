@@ -4,6 +4,8 @@ BEGIN;
 
 SELECT (id,
        corpus_type,
+       tokens,
+       tokens_dedupl,
        title,
        description,
        created_at,

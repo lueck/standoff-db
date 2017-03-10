@@ -25,6 +25,8 @@ CREATE TYPE standoff.corpus_types AS ENUM
 CREATE TABLE IF NOT EXISTS standoff.corpus (
        id serial not null,
        corpus_type standoff.corpus_types not null,
+       tokens integer not null default 0,        -- count of tokens in the corpus with duplicates
+       tokens_dedupl integer not null default 0, -- count of tokens without duplicates
        title text,
        description text,
        -- meta data.
