@@ -75,10 +75,7 @@ CREATE TRIGGER create_document_corpus AFTER INSERT ON standoff.document
        FOR EACH ROW EXECUTE PROCEDURE standoff.create_document_corpus();
 
 
--- Trigger for deleting document from all corpora. It is called AFTER
--- DELETE, so that the corpus entry is still there during the deletion
--- of the document's tokens.
-
+-- Trigger for deleting document from all corpora.
 CREATE OR REPLACE FUNCTION standoff.delete_document_from_corpus()
        RETURNS TRIGGER AS $$
        DECLARE
@@ -126,7 +123,7 @@ CREATE TRIGGER document_corpus_size1 BEFORE INSERT ON standoff.corpus_document
 --
 -- FIXME: Something wrong with RLS. Triggers only create corpus, but
 -- no corpus documents.
-ALTER TABLE standoff.corpus_document ENABLE ROW LEVEL SECURITY;
+--ALTER TABLE standoff.corpus_document ENABLE ROW LEVEL SECURITY;
 
 
 -- CREATE POLICY debug ON standoff.corpus_document FOR INSERT TO standoffuser
