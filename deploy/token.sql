@@ -8,7 +8,7 @@ BEGIN;
 CREATE TABLE IF NOT EXISTS standoff.token (
        document integer not null references standoff.document ON DELETE CASCADE,
        number integer not null,
-       token text,
+       token text not null,
        source_start integer,
        source_end integer,
        text_start integer,
