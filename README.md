@@ -1,4 +1,52 @@
-# Database relations for stand-off markup #
+# Database relations for stand-off annotations and text mining #
+
+State: Under construction and still keeps changing. Not ready for
+production. We do not yet use the deploy-tool's tag system.
+
+## Features ##
+
+- Relations for documents and for grouping them in user defined
+  corpora and for a global corpus.
+
+- Basic text mining functionality: relations for tokens, for
+  frequencies of tokens per corpus (user defined, global and per
+  document), for the absolute count of tokens in a corpus, with and
+  without deduplication. Relations for lemmas, sentences and POStags
+  will follow soon.
+
+- Relations for standoff annotations (external markup) that reference
+  the document (source) by character offsets.
+
+- Discontinuous markup, RDF-like relations between markup ranges,
+  attributes to markup.
+
+- Stand-off annotations and tokens both have columns for character
+  offsets, so that they can be interrelated. - Use your annotations
+  for text mining.
+  
+- Character offsets of markup, tokens etc. in relation to a) the
+  source file, b) the plaintext separated from the source. Have a look
+  at [htcf](http://github.com/lueck/htcf), which is a tokenizer, that
+  outputs tokens with these two types of character offsets, and a
+  command line program for getting TCF files into the database.
+
+- The `document` relation makes it possible to collect text in various
+  input formats, which are stored base64 encoded. Plain text formats
+  like `text/plaintext` or `text/xml` can be viewed as decoded text in
+  a view called `text_document`. Column `plaintext` for text layer
+  like in TCF.
+
+- Relations for bibliography/meta data.
+
+- Row level security and unix-like groups and privileges for hiding
+  and sharing documents, corpora, annotations etc.
+
+- Everything lives in a schema called `standoff`.
+
+- Makes no assumption about user management and authentication. I use
+  the role management of the RDBMS.
+
+- Makes no assumption about application. Plain SQL.
 
 ## Requirements ##
 
@@ -9,7 +57,7 @@
   the [pgdg](https://www.postgresql.org/download/).
   
 - [Sqitch](http://sqitch.org): Database migration tool required for
-  deploying.
+  deployment.
 
 - [pgTAP](http://pgtap.org/): Required for running tests, contained in
   the `postgresql-VERSION-pgtap` package provided by the
@@ -38,12 +86,13 @@ is needed as an extension.
 
 	createdb arb_test
 	psql -d arb_test -c "CREATE EXTENSION pgtap;"
+	cd <PATH TO standoff-db>
 	sqitch deploy
 	pg_prove -d arb_test test/*.sql
 
 ## RESTful webservice ##
 
-PostgREST make it easy to expose the database schema through through a
+PostgREST makes it easy to expose the database schema through through a
 RESTful web api. After installation run
 
 	postgrest postgres://standoffrest:$RESTPASS@localhost/arb_test -a standoffanon --schema 'standoff'
