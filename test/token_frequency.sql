@@ -1,6 +1,6 @@
 -- Start transaction and plan the tests
 BEGIN;
-SELECT plan(35);
+SELECT plan(38);
 
 SELECT lives_ok('INSERT INTO standoff.mimetype (id) VALUES 
        			(''text/plaintext'')
@@ -118,6 +118,11 @@ SELECT is(count(*)::integer, 14) FROM standoff.token_frequency tf, standoff.corp
        WHERE tf.corpus = c.id
        AND c.title = 'fun@Testing$$';
 
+-- How many different tokens are there in corpus 'fun@Testing$$'?
+SELECT is(c.tokens_dedupl, 14) FROM standoff.corpus c
+       WHERE c.title = 'fun@Testing$$';
+
+
 -- delete second document from corpus 'fun@Testing$$'
 SELECT lives_ok('DELETE FROM standoff.corpus_document
        			WHERE document = currval(''standoff.document_id_seq'')
@@ -161,6 +166,9 @@ SELECT is(count(*)::integer, 8) FROM standoff.token_frequency tf, standoff.corpu
        WHERE tf.corpus = c.id
        AND c.title = 'fun@Testing$$';
 
+SELECT is(c.tokens_dedupl, 8) FROM standoff.corpus c
+       WHERE c.title = 'fun@Testing$$';
+
 -- deletion of a document should result in cascading deletion of its tokens.
 SELECT lives_ok('DELETE FROM standoff.document WHERE id =
        			(SELECT cd.document 
@@ -177,6 +185,10 @@ SELECT is(c.tokens, 0) FROM standoff.corpus c
 SELECT is(count(*)::integer, 0) FROM standoff.token_frequency tf, standoff.corpus c
        WHERE tf.corpus = c.id
        AND c.title = 'fun@Testing$$';
+
+SELECT is(c.tokens_dedupl, 0) FROM standoff.corpus c
+       WHERE c.title = 'fun@Testing$$';
+
 
 -- Finish the tests and clean up.
 SELECT finish();

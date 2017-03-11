@@ -33,6 +33,16 @@ CREATE OR REPLACE FUNCTION standoff.inc_token_frequency(doc integer, tok text)
        	   	    FROM standoff.corpus_document cd
 		    WHERE cd.document = doc
 		    LOOP
+		    -- Increment token_dedupl where token is still
+		    -- missing.
+		    UPDATE standoff.corpus
+		    	   SET tokens_dedupl = tokens_dedupl + 1
+			   WHERE id = corps
+			   AND NOT EXISTS
+			   (SELECT *
+       	     	    	    FROM standoff.token_frequency tf
+	     	    	    WHERE tf.token = tok    -- token not already present
+			    AND tf.corpus = corps); -- in corpus
 		    -- Insert token in each corpus where it is still
 		    -- missing.
        		    INSERT INTO standoff.token_frequency (corpus, token)
@@ -119,6 +129,14 @@ CREATE OR REPLACE FUNCTION standoff.dec_token_frequency(doc integer, tok text)
 		    	   SET frequency = frequency - 1
 			   WHERE token = tok
 			   AND corpus = corps;
+		    -- Decrement token_dedupl if frequency equals 0 now.
+		    UPDATE standoff.corpus
+		    	   SET tokens_dedupl = tokens_dedupl - 1
+			   WHERE id = corps
+			   AND 0 = (SELECT tf.frequency
+       	     	    	       	    FROM standoff.token_frequency tf
+	     	    	    	    WHERE tf.frequency = 0  -- token not already present
+			    	    AND tf.corpus = corps); -- in corpus
        END LOOP;
        -- delete token where it's frequency equals 0.
        DELETE FROM standoff.token_frequency WHERE frequency = 0;
