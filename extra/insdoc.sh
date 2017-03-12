@@ -10,7 +10,10 @@ insdoc.sh FILE [options to psql]   Insert FILE into document table.
 In the second form insdoc.sh inserts a document into a POSTgreSQL
 database with a standoff schema installed. The document path must be
 passed as first parameter. Subsequent parameters are passed to psql
-which is used as database client.
+which is used as database client. 
+
+mkdocrow.sh which ships with insdoc.sh must be in the same directory
+as insdoc.sh.
 
 See also: man (1) psql'
 
