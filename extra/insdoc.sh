@@ -12,10 +12,10 @@ database with a standoff schema installed. The document path must be
 passed as first parameter. Subsequent parameters are passed to psql
 which is used as database client. 
 
-mkdocrow.sh which ships with insdoc.sh must be in the same directory
+mkdocrow.sh, which ships with insdoc.sh, must be in the same directory
 as insdoc.sh.
 
-See also: man (1) psql'
+See also: psql(1), http://github.com/lueck/standoff-db'
 
 die()
 {
