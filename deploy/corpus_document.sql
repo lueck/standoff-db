@@ -52,7 +52,7 @@ CREATE OR REPLACE FUNCTION standoff.create_document_corpus()
        	      (corpus_type, title, description, created_at, created_by, gid, privilege)
        	      VALUES ('document',
        	       	      'Document corpus ' || NEW.id :: text,
-	       	      'This corpus contains only document with id=' || NEW.id :: text || '''.',
+	       	      'This corpus contains only document with id=' || NEW.id :: text || '.',
 	       	      current_timestamp,
 	       	      current_user,
 	       	      current_user,
@@ -88,7 +88,7 @@ CREATE OR REPLACE FUNCTION standoff.delete_document_from_corpus()
 	      AND cd.document = OLD.id;
        DELETE FROM standoff.corpus_document WHERE document = OLD.id;
        DELETE FROM standoff.corpus WHERE id = doc_corpus_id;
-       RETURN NULL;
+       RETURN OLD;
        END;
        $$ LANGUAGE plpgsql
        SECURITY DEFINER;
