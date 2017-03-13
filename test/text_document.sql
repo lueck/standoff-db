@@ -31,7 +31,7 @@ SELECT is(decode(source_base64, 'base64'), 'Hallo Welt. Grüße!')
        FROM standoff.document WHERE id = currval('standoff.document_id_seq');
 
 SELECT is(d.id, currval('standoff.document_id_seq')::integer) FROM standoff.document d, standoff.text_document t
-       WHERE decode(d.source_base64, 'base64') = t.text AND t.text = 'Hallo Welt. Grüße!';
+       WHERE convert_from(decode(d.source_base64, 'base64'), 'utf-8') = t.text AND t.text = 'Hallo Welt. Grüße!';
 
 SELECT is(source_md5, md5(text)::uuid) FROM standoff.text_document
        WHERE id = currval('standoff.document_id_seq');

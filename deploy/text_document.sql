@@ -16,7 +16,7 @@ CREATE VIEW standoff.text_document AS
 	d.mimetype,
 	d.description,
 	d.plaintext,
-	decode(d.source_base64, 'base64') AS text,
+	convert_from(decode(d.source_base64, 'base64'), 'utf-8') AS text,
 	d.created_at,
 	d.created_by,
 	d.updated_at,
@@ -38,7 +38,7 @@ BEGIN
 		VALUES 
 	       (NEW.reference,
 		md5(NEW.text)::uuid,
-		encode(NEW.text, 'base64'),
+		encode(NEW.text::bytea, 'base64'),
 		NEW.source_uri,
 		NEW.source_charset,
 		NEW.mimetype,
