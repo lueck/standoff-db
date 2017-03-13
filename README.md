@@ -1,7 +1,7 @@
-# Database relations for stand-off annotations and text mining #
+# Database relations for stand-off annotations and basic text mining #
 
 State: Under construction and still keeps changing. Not ready for
-production. We do not yet use the deploy-tool's tag system.
+production yet. We do not yet use the deployment-tool's tag system.
 
 ## Features ##
 
@@ -18,17 +18,20 @@ production. We do not yet use the deploy-tool's tag system.
   the document (source) by character offsets.
 
 - Discontinuous markup, RDF-like relations between markup ranges,
-  attributes to markup.
+  attributes on markup.
 
 - Stand-off annotations and tokens both have columns for character
   offsets, so that they can be interrelated. - Use your annotations
   for text mining.
   
-- Character offsets of markup, tokens etc. in relation to a) the
-  source file, b) the plaintext separated from the source. Have a look
-  at [htcf](http://github.com/lueck/htcf), which is a tokenizer, that
-  outputs tokens with these two types of character offsets, and a
-  command line program for getting TCF files into the database.
+- Two types of character offsets of markup, tokens etc.: a) in
+  relation to the source file, b) in relation to the plaintext
+  separated from the source. Have a look at
+  [htcf](http://github.com/lueck/htcf), which is a tokenizer, that
+  outputs tokens with these two types of character offsets, and which
+  is also a command line program for getting
+  [WebLicht](http://weblicht.sfs.uni-tuebingen.de/weblichtwiki/index.php/Main_Page)'s
+  TCF files into the database.
 
 - The `document` relation makes it possible to collect text in various
   input formats, which are stored base64 encoded. Plain text formats
@@ -47,6 +50,9 @@ production. We do not yet use the deploy-tool's tag system.
   the role management of the RDBMS.
 
 - Makes no assumption about application. Plain SQL.
+
+- `bash` scripts for inserting documents and for getting TCF files
+  into the relations.
 
 ## Requirements ##
 
