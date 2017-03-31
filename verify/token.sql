@@ -3,13 +3,11 @@
 BEGIN;
 
 SELECT (document,
+       source_range,
+       text_range,
        number,
        token,
-       lemma,
-       source_start,
-       source_end,
-       text_start,
-       text_end)
+       lemma)
        FROM standoff.token WHERE FALSE;
 
 SELECT has_table_privilege('standoffuser', 'standoff.token', 'SELECT, INSERT');

@@ -64,7 +64,7 @@ textcommand="\\set txt \`tcflayer -rx ${infile}\` \\\\ UPDATE standoff.document 
 # write tokens to a temporary file
 #tcflayer -tv $infile | sed "s/^/${DOCID},/g" > $tmptokens
 
-tokencommand="\\copy standoff.token (document, token, number, source_start, source_end, text_start, text_end) from program 'tcflayer -tv "${infile}" | sed \"s/^/"${DOCID}",/g\"' delimiter ',' CSV;"
+tokencommand="\\copy standoff.token (document, token, number, text_range, source_range) from program 'tcflayer -tv "${infile}" | sed \"s/^/"${DOCID}",/g\"' delimiter ',' CSV;"
 
 command="BEGIN; ${textcommand} ${tokencommand} COMMIT;"
 
