@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS standoff.ontology (
 	id serial not null,
 	namespace varchar not null,
 	version varchar,
-	definition xml,
+	definition text,
 	created_at timestamp not null DEFAULT current_timestamp,
 	created_by varchar not null,
 	updated_at timestamp,
