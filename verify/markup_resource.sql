@@ -2,7 +2,7 @@
 
 BEGIN;
 
-SELECT (id, namespace, local_name, qualified_name, prefix, prefixed_name, definition, created_at, created_by, updated_at, updated_by, gid, privilege)
+SELECT (id, namespace, local_name, qualified_name, prefix, prefixed_name, created_at, created_by, updated_at, updated_by, gid, privilege)
        FROM standoff.markup_resource WHERE FALSE;
 
 

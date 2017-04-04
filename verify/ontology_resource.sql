@@ -2,7 +2,7 @@
 
 BEGIN;
 
-SELECT (id, local_name, ontology, definition, resource_type, created_at, created_by, updated_at, updated_by, gid, privilege) FROM standoff.ontology_resource WHERE FALSE;
+SELECT (id, local_name, ontology, application, created_at, created_by, updated_at, updated_by, gid, privilege) FROM standoff.ontology_resource WHERE FALSE;
 
 
 SELECT 1/has_table_privilege('standoffuser', 'standoff.ontology_resource', 'SELECT')::integer;
