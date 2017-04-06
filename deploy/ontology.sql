@@ -35,13 +35,13 @@ CREATE TABLE IF NOT EXISTS standoff.ontology (
 	UNIQUE (version_iri));
 
 
-GRANT SELECT ON TABLE standoff.ontology TO standoffuser;
+GRANT SELECT, INSERT, UPDATE ON TABLE standoff.ontology TO standoffuser;
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE standoff.ontology
       TO standoffeditor, standoffadmin;
 
 
-GRANT USAGE ON SEQUENCE standoff.ontology_id_seq TO standoffeditor, standoffadmin;
+GRANT SELECT, USAGE ON SEQUENCE standoff.ontology_id_seq TO standoffuser, standoffeditor, standoffadmin;
 
 
 CREATE TRIGGER set_meta_on_insert BEFORE INSERT ON standoff.ontology

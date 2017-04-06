@@ -14,7 +14,7 @@ SELECT (document,
 
 SELECT has_table_privilege('standoffuser', 'standoff.token', 'SELECT, INSERT');
 SELECT has_table_privilege('standoffeditor', 'standoff.token', 'SELECT, INSERT, UPDATE, DELETE');
-SELECT has_table_privilege('standoffadmin', 'standoff.bibliography', 'SELECT, INSERT, UPDATE, DELETE');
+SELECT has_table_privilege('standoffadmin', 'standoff.token', 'SELECT, INSERT, UPDATE, DELETE');
 
 SELECT 1/count(tgname) FROM pg_trigger t
        WHERE NOT tgisinternal

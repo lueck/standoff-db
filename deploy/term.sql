@@ -30,7 +30,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE standoff.term
       TO standoffuser, standoffeditor, standoffadmin;
 
 
-GRANT USAGE ON SEQUENCE standoff.term_id_seq
+GRANT SELECT, USAGE ON SEQUENCE standoff.term_id_seq
       TO standoffuser, standoffeditor, standoffadmin;
 
 

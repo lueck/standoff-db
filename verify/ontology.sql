@@ -5,12 +5,12 @@ BEGIN;
 SELECT (id, iri, version_info, version_iri, namespace_delimiter, prefix, definition, closed, deprecated, created_at, created_by, updated_at, updated_by, gid, privilege) FROM standoff.ontology WHERE FALSE;
 
 
-SELECT 1/has_table_privilege('standoffuser', 'standoff.ontology', 'SELECT')::integer;
+SELECT 1/has_table_privilege('standoffuser', 'standoff.ontology', 'SELECT, INSERT, UPDATE')::integer;
 SELECT 1/has_table_privilege('standoffeditor', 'standoff.ontology', 'SELECT, INSERT, UPDATE, DELETE')::integer;
 SELECT 1/has_table_privilege('standoffadmin', 'standoff.ontology', 'SELECT, INSERT, UPDATE, DELETE')::integer;
 
 
-SELECT 1/(has_table_privilege('standoffuser', 'standoff.ontology', 'INSERT, UPDATE, DELETE')::integer - 1);
+SELECT 1/(has_table_privilege('standoffuser', 'standoff.ontology', 'DELETE')::integer - 1);
 
 
 SELECT 1/count(tgname) FROM pg_trigger t
