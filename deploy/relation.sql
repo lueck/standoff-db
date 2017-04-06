@@ -1,7 +1,6 @@
 -- Deploy relation
 -- requires: markup
 -- requires: term
--- requires: document
 -- requires: arbschema
 -- requires: set_meta_on_insert
 -- requires: set_meta_on_update
