@@ -23,3 +23,4 @@ token_frequency [token corpus arbschema arbroles] 2017-03-09T23:36:54Z Christian
 ontology [arbschema arbroles set_meta_on_insert adjust_privilege extension] 2016-07-10T21:06:06Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add ontology table.
 term [ontology arbschema arbroles application set_meta_on_update set_meta_on_insert adjust_privilege] 2016-07-11T15:23:53Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add relation for ontology resource.
 ontology_term [ontology term arbschema arbroles] 2016-07-11T21:09:39Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add view left-joining term with ontology.
+has_term_application [term application arbschema] 2017-04-06T20:56:03Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add function for testing if a term has a given application.
