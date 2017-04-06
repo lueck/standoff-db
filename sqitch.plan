@@ -26,3 +26,4 @@ term [ontology arbschema arbroles application set_meta_on_update set_meta_on_ins
 ontology_term [ontology term arbschema arbroles] 2016-07-11T21:09:39Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add view left-joining term with ontology.
 has_term_application [term application arbschema] 2017-04-06T20:56:03Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add function for testing if a term has a given application.
 markup [term ontology document document_range arbschema arbroles set_meta_on_insert set_meta_on_update adjust_privilege] 2017-04-06T08:11:10Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add a relation for markup.
+relation [markup term document arbschema set_meta_on_insert set_meta_on_update adjust_privilege] 2017-04-06T21:20:18Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add a table for relations on markup.
