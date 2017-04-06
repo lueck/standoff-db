@@ -1,4 +1,4 @@
--- Deploy markup_resource
+-- Deploy ontology_term
 -- requires: ontology
 -- requires: ontology_resource
 -- requires: system_prefix
@@ -7,26 +7,28 @@
 
 BEGIN;
 
-CREATE VIEW standoff.markup_resource AS
+-- A view that shows terms together with their ontology.
+CREATE VIEW standoff.ontology_term AS
        SELECT
-	r.id,
-       	o.namespace,
-       	r.local_name,
-       	o.namespace||r.local_name AS qualified_name,
-	p.prefix,
-	p.prefix||':'||r.local_name AS prefixed_name,
-       	r.application,
-       	r.created_at,
-       	r.created_by,
-       	r.updated_at,
-	r.updated_by,
-	r.gid,
-	r.privilege
-       FROM standoff.ontology o, standoff.ontology_resource r, standoff.system_prefix p
-       WHERE r.ontology = o.id AND p.namespace = o.namespace;
+	t.id,
+       	o.iri,
+	o.version_iri,
+       	t.local_name,
+	o.namespace_delimiter,
+       	o.iri||o.namespace_delimiter||t.local_name AS qualified_name,
+	o.prefix,
+	o.prefix||':'||t.local_name AS prefixed_name,
+       	t.application,
+       	t.created_at,
+       	t.created_by,
+       	t.updated_at,
+	t.updated_by,
+	t.gid,
+	t.privilege
+       FROM standoff.term t, standoff.ontology o
+       WHERE t.ontology = o.id;
 
-
-GRANT SELECT ON TABLE standoff.markup_resource
+GRANT SELECT ON TABLE standoff.ontology_term
       TO standoffuser, standoffeditor, standoffadmin;
 
 

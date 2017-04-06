@@ -1,6 +1,6 @@
--- Deploy ontology_resource
+-- Deploy term
 -- requires: ontology
--- requires: resource_type_application
+-- requires: application
 -- requires: arbschema
 -- requires: arbroles
 -- requires: set_meta_on_update
@@ -9,42 +9,42 @@
 
 BEGIN;
 
-CREATE TABLE IF NOT EXISTS standoff.ontology_resource (
-	id serial not null,
-	local_name varchar not null,
-	ontology integer not null references standoff.ontology,
-	application varchar references standoff.application,
+-- A term is a class, property etc. defined in an ontology.
+CREATE TABLE IF NOT EXISTS standoff.term (
+	id serial not null,           -- integer ID
+	local_name varchar not null,  -- local part of the qualified name of the term
+	ontology integer not null references standoff.ontology, -- relation to ontology
+	application varchar references standoff.application,  -- whether it's markup, relation, attribute etc.
 	created_at timestamp not null DEFAULT current_timestamp,
 	created_by varchar not null,
 	updated_at timestamp,
 	updated_by varchar,
+	-- FIXME: better use gid and privilege from ontology
 	gid varchar null,
-	privilege integer not null DEFAULT 492,
+	privilege integer not null DEFAULT 292, -- #o444
 	PRIMARY KEY (id),
 	UNIQUE (ontology, local_name));
 
 
-GRANT SELECT ON TABLE standoff.ontology_resource TO standoffuser;
-
-GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE standoff.ontology_resource
-      TO standoffeditor, standoffadmin;
+GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE standoff.term
+      TO standoffuser, standoffeditor, standoffadmin;
 
 
-GRANT USAGE ON SEQUENCE standoff.ontology_resource_id_seq
-      TO standoffeditor, standoffadmin;
+GRANT USAGE ON SEQUENCE standoff.term_id_seq
+      TO standoffuser, standoffeditor, standoffadmin;
 
 
-CREATE TRIGGER set_meta_on_insert BEFORE INSERT ON standoff.ontology_resource
+CREATE TRIGGER set_meta_on_insert BEFORE INSERT ON standoff.term
     FOR EACH ROW EXECUTE PROCEDURE standoff.set_meta_on_insert();
 
-CREATE TRIGGER set_meta_on_update BEFORE UPDATE ON standoff.ontology_resource
+CREATE TRIGGER set_meta_on_update BEFORE UPDATE ON standoff.term
     FOR EACH ROW EXECUTE PROCEDURE standoff.set_meta_on_update();
 
 
-CREATE TRIGGER adjust_privilege_on_insert BEFORE INSERT ON standoff.ontology_resource
-    FOR EACH ROW EXECUTE PROCEDURE standoff.adjust_privilege(492);
+CREATE TRIGGER adjust_privilege_on_insert BEFORE INSERT ON standoff.term
+    FOR EACH ROW EXECUTE PROCEDURE standoff.adjust_privilege(292);
 
-CREATE TRIGGER adjust_privilege_on_update BEFORE UPDATE ON standoff.ontology_resource
-    FOR EACH ROW EXECUTE PROCEDURE standoff.adjust_privilege(492);
+CREATE TRIGGER adjust_privilege_on_update BEFORE UPDATE ON standoff.term
+    FOR EACH ROW EXECUTE PROCEDURE standoff.adjust_privilege(292);
 
 COMMIT;

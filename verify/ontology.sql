@@ -2,7 +2,7 @@
 
 BEGIN;
 
-SELECT (id, namespace, version, definition, created_at, created_by, updated_at, updated_by, gid, privilege) FROM standoff.ontology WHERE FALSE;
+SELECT (id, iri, version_info, version_iri, namespace_delimiter, prefix, definition, closed, deprecated, created_at, created_by, updated_at, updated_by, gid, privilege) FROM standoff.ontology WHERE FALSE;
 
 
 SELECT 1/has_table_privilege('standoffuser', 'standoff.ontology', 'SELECT')::integer;

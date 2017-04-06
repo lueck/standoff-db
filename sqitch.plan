@@ -21,7 +21,6 @@ corpus_document [document corpus] 2017-03-07T23:15:50Z Christian Lück <christia
 token [document arbschema arbroles] 2017-03-07T13:35:03Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add table for TCF token layer
 token_frequency [token corpus arbschema arbroles] 2017-03-09T23:36:54Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add a table for the frequencies of the tokens of a corpus.
 ontology [arbschema arbroles set_meta_on_insert adjust_privilege extension] 2016-07-10T21:06:06Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add ontology table.
-resource_type_application [application arbschema arbroles] 2016-07-11T15:08:51Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add a relation, relating application and source types.
-ontology_resource [ontology resource_type_application arbschema arbroles set_meta_on_update set_meta_on_insert adjust_privilege] 2016-07-11T15:23:53Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add relation for ontology resource.
+ontology_resource [ontology arbschema arbroles application set_meta_on_update set_meta_on_insert adjust_privilege] 2016-07-11T15:23:53Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add relation for ontology resource.
 system_prefix [arbschema arbroles] 2016-07-11T20:56:40Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add table for preferred systemwide prefixes.
 markup_resource [ontology ontology_resource system_prefix arbschema arbroles] 2016-07-11T21:09:39Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add view joining ontology_resource with ontology and system_prefix.

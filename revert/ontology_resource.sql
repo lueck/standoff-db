@@ -1,20 +1,20 @@
--- Revert ontology_resource
+-- Revert term
 
 BEGIN;
 
-DROP TRIGGER set_meta_on_insert ON standoff.ontology_resource;
-DROP TRIGGER set_meta_on_update ON standoff.ontology_resource;
+DROP TRIGGER set_meta_on_insert ON standoff.term;
+DROP TRIGGER set_meta_on_update ON standoff.term;
 
-DROP TRIGGER adjust_privilege_on_insert ON standoff.ontology_resource;
-DROP TRIGGER adjust_privilege_on_update ON standoff.ontology_resource;
+DROP TRIGGER adjust_privilege_on_insert ON standoff.term;
+DROP TRIGGER adjust_privilege_on_update ON standoff.term;
 
-REVOKE ALL PRIVILEGES ON TABLE standoff.ontology_resource
+REVOKE ALL PRIVILEGES ON TABLE standoff.term
        FROM standoffuser, standoffeditor, standoffadmin;
 
-REVOKE ALL PRIVILEGES ON SEQUENCE standoff.ontology_resource_id_seq
+REVOKE ALL PRIVILEGES ON SEQUENCE standoff.term_id_seq
        FROM standoffuser, standoffeditor, standoffadmin;
 
-DROP TABLE standoff.ontology_resource;
+DROP TABLE standoff.term;
 
 
 COMMIT;

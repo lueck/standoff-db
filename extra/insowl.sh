@@ -45,15 +45,17 @@ tmp_ontology_id=$tmp_dir/ontology_id.dat
 standoff owl2csv -o $infile > $tmp_ontology
 standoff owl2csv -r $infile > $tmp_resources
 
+touch $tmp_ontology_id
+
 # FIXME: Do this in one transaction and roll back on error.
 
-ontology_command="\\copy standoff.ontology (namespace, version, definition) from '"${tmp_ontology}"' delimiter ',' CSV; SELECT currval('standoff.ontology_id_seq');";
+ontology_command="\\copy standoff.ontology (iri, namespace_delimiter, prefix, version_info, definition) from '"${tmp_ontology}"' delimiter ',' CSV; SELECT currval('standoff.ontology_id_seq');";
 
 ont_id=$(echo $ontology_command | psql -t $psqlopts)
 
 #sed -i "s/^/${ont_id},/g" $tmp_ontology 
 
-resource_command="\\copy standoff.ontology_resource (ontology, local_name, application) from program 'sed \"s/^/"${ont_id}",/g\" "${tmp_resources}"' delimiter ',' CSV;"
+resource_command="\\copy standoff.term (ontology, local_name, application) from program 'sed \"s/^/"${ont_id}",/g\" "${tmp_resources}"' delimiter ',' CSV;"
 
 echo $resource_command | psql -t $psqlopts
 
