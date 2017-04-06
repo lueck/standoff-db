@@ -11,11 +11,6 @@
 
 BEGIN;
 
-CREATE OR REPLACE FUNCTION standoff.has_term_application (termId int, app varchar)
-RETURNS boolean AS $$
-	SELECT (SELECT application FROM standoff.term t WHERE t.id = termId) = app AS result;
-$$ LANGUAGE SQL;
-
 CREATE TABLE IF NOT EXISTS standoff.markup (
        id uuid not null DEFAULT uuid_generate_v1(),
        term int not null references standoff.term,

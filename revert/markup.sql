@@ -27,6 +27,4 @@ DROP POLICY IF EXISTS allow_delete_to_owner ON standoff.markup;
 
 DROP TABLE IF EXISTS standoff.markup;
 
-DROP FUNCTION standoff.has_term_application(termId int, app varchar);
-
 COMMIT;
