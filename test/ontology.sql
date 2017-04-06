@@ -1,12 +1,13 @@
 -- Start transaction and plan the tests
 BEGIN;
-SELECT * FROM no_plan();
+SELECT plan(16);
+--SELECT * FROM no_plan();
 
 -- Run the tests.
 
 SET ROLE standoffeditor;
 
-SELECT lives_ok('INSERT INTO standoff.ontology (namespace, version) VALUES
+SELECT lives_ok('INSERT INTO standoff.ontology (iri, version_info) VALUES
        			(''http://arb.de/ontology/arb/'', ''v0.2'')');
 
 
@@ -15,8 +16,8 @@ SELECT lives_ok('INSERT INTO standoff.term
 			(currval(''standoff.ontology_id_seq''), ''Beispiel'')');
 
 
--- unique combination of namespace and version
-SELECT throws_ok('INSERT INTO standoff.ontology (namespace, version) VALUES
+-- unique combination of namespace and version_info
+SELECT throws_ok('INSERT INTO standoff.ontology (iri, version_info) VALUES
        			(''http://arb.de/ontology/arb/'', ''v0.2'')');
 
 -- unique local_name in ontology
@@ -25,7 +26,7 @@ SELECT throws_ok('INSERT INTO standoff.term
 			(currval(''standoff.ontology_id_seq''), ''Beispiel'')');
 
 
-SELECT lives_ok('INSERT INTO standoff.ontology (namespace, version) VALUES
+SELECT lives_ok('INSERT INTO standoff.ontology (iri, version_info) VALUES
        			(''http://arb.de/ontology/arb/'', ''v0.3'')');
 
 
@@ -38,27 +39,37 @@ SELECT lives_ok('INSERT INTO standoff.term
 			(currval(''standoff.ontology_id_seq''), ''Konzept'')');
 
 
-SELECT is(version, 'v0.3') FROM standoff.ontology o, standoff.term r
+SELECT is(version_info, 'v0.3') FROM standoff.ontology o, standoff.term r
        WHERE r.local_name = 'Konzept' AND r.ontology = o.id;
 
 
-SELECT set_eq('SELECT version FROM standoff.ontology o, standoff.term r
+SELECT set_eq('SELECT version_info FROM standoff.ontology o, standoff.term r
        		      WHERE r.local_name = ''Beispiel'' AND r.ontology = o.id',
 	      ARRAY['v0.3', 'v0.2']) ;
 
+
+-- as long as namespace_delimiter is null, there is no qualified name
+SELECT is(qualified_name, null)
+       FROM standoff.ontology_term
+       WHERE local_name = 'Konzept';
+
+-- we set namespace_delimiter to empty string for slash namespaces
+SELECT lives_ok('UPDATE standoff.ontology SET namespace_delimiter = ''''
+       			WHERE iri = ''http://arb.de/ontology/arb/''');
 
 SELECT is(qualified_name, 'http://arb.de/ontology/arb/Konzept')
        FROM standoff.ontology_term
        WHERE local_name = 'Konzept';
 
-SELECT is(prefix, null)
+
+-- for the prefixed name a prefix is required
+SELECT is(prefixed_name, null)
        FROM standoff.ontology_term
        WHERE local_name = 'Konzept';
 
-
--- we can set a system-wide preferred prefix.
-SELECT lives_ok('INSERT INTO standoff.system_prefix (namespace, prefix) VALUES
-       			(''http://arb.de/ontology/arb/'', ''arb'')');
+-- we set a prefix.
+SELECT lives_ok('UPDATE standoff.ontology SET prefix = ''arb''
+       			WHERE iri = ''http://arb.de/ontology/arb/''');
 
 
 SELECT is(prefix, 'arb')
