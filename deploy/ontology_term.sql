@@ -1,7 +1,6 @@
 -- Deploy ontology_term
 -- requires: ontology
 -- requires: ontology_resource
--- requires: system_prefix
 -- requires: arbschema
 -- requires: arbroles
 
