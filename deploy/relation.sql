@@ -22,7 +22,7 @@ CREATE TABLE IF NOT EXISTS standoff.relation (
        privilege integer not null DEFAULT 493, -- #o755: rwxr_xr_x
        PRIMARY KEY (id),
        UNIQUE (subject, predicate, object),
-       CONSTRAINT relation_term CHECK (standoff.has_term_application(predicate, 'relation'::varchar)));
+       CONSTRAINT relation_predicate_term CHECK (standoff.has_term_application(predicate, 'relation'::varchar)));
 
 CREATE INDEX IF NOT EXISTS relation_subject_idx
 ON standoff.relation (subject);
