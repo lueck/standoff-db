@@ -2,7 +2,6 @@
 -- requires: term
 -- requires: ontology
 -- requires: document
--- requires: document_range
 -- requires: arbschema
 -- requires: arbroles
 -- requires: set_meta_on_insert
@@ -13,6 +12,7 @@ BEGIN;
 
 CREATE TABLE IF NOT EXISTS standoff.markup (
        id uuid not null DEFAULT uuid_generate_v1(),
+       document int not null references standoff.document,
        term int not null references standoff.term,
        internalized boolean not null DEFAULT false,
        created_at timestamp not null,
@@ -22,16 +22,7 @@ CREATE TABLE IF NOT EXISTS standoff.markup (
        gid varchar,
        privilege integer not null DEFAULT 493, -- #o755: rwxr_xr_x
        PRIMARY KEY (id),
-       CONSTRAINT markup_term CHECK (standoff.has_term_application(term, 'markup'::varchar)))
-       INHERITS (standoff.document_range);
-
-CREATE INDEX IF NOT EXISTS markup_text_range_idx
-ON standoff.markup
-USING GIST (text_range);
-
-CREATE INDEX IF NOT EXISTS markup_source_range_idx
-ON standoff.markup
-USING GIST (source_range);
+       CONSTRAINT markup_term CHECK (standoff.has_term_application(term, 'markup'::varchar)));
 
 CREATE INDEX IF NOT EXISTS markup_document_idx
 ON standoff.markup (document);

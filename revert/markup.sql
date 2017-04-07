@@ -5,8 +5,6 @@ BEGIN;
 REVOKE ALL PRIVILEGES ON TABLE standoff.markup
 FROM standoffuser, standoffeditor, standoffadmin;
 
-DROP INDEX standoff.markup_text_range_idx;
-DROP INDEX standoff.markup_source_range_idx;
 DROP INDEX standoff.markup_document_idx;
 DROP INDEX standoff.markup_term_idx;
 DROP INDEX standoff.markup_internalized_idx;

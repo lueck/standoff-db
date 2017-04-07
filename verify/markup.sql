@@ -2,7 +2,7 @@
 
 BEGIN;
 
-SELECT (document, text_range, source_range,
+SELECT (document,
        id, term, internalized,
        created_at, created_by, updated_at, updated_by,
        gid, privilege)
