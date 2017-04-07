@@ -29,3 +29,4 @@ markup [term ontology document document_range arbschema arbroles set_meta_on_ins
 relation [markup term arbschema set_meta_on_insert set_meta_on_update adjust_privilege] 2017-04-06T21:20:18Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add a table for relations on markup.
 attribute [markup term arbschema set_meta_on_insert set_meta_on_update adjust_privilege] 2017-04-06T21:45:36Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add relation for attributes on markup.
 markup_range [markup document_range set_meta_on_insert set_meta_on_update adjust_privilege] 2017-04-07T18:13:27Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add relation for discontinous markup: markup range.
+markup_range_term [ontology term markup markup_range document] 2017-04-07T20:39:44Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add a view for left-joining markup_range with markup, ontology and term.

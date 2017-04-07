@@ -1,6 +1,6 @@
 -- Start transaction and plan the tests
 BEGIN;
-SELECT plan(46);
+SELECT plan(55);
 
 -- we drop these triggers because of currval within transaction.
 DROP TRIGGER IF EXISTS create_document_corpus ON standoff.document;
@@ -65,6 +65,10 @@ SELECT lives_ok('INSERT INTO standoff.markup_range
 -- There are 2 ranges now.
 SELECT is(count(*)::integer, 2) FROM standoff.markup_range WHERE markup = md5('testId1')::uuid;
 
+-- They can be accessed through the view markup_range_term, too.
+SELECT is(count(*)::integer, 2) FROM standoff.markup_range_term WHERE markup = md5('testId1')::uuid;
+
+
 -- We can't add an other range to the related with the same value on text_range.
 SELECT throws_ok('INSERT INTO standoff.markup_range
        	  		 (document, markup, id, text_range, source_range) VALUES
@@ -79,13 +83,15 @@ SELECT throws_ok('INSERT INTO standoff.markup_range
 			 '23505',
 			 'duplicate key value violates unique constraint "markup_range_markup_source_range_key"');
 
+
+
 -- The group ID (gid) is null by default.
 SELECT is(gid, null) FROM standoff.markup WHERE id = md5('testId1')::uuid; 
 
--- Let's set it to testingbob.
+-- Let's set it to testingbob for later tests.
 SELECT lives_ok('UPDATE standoff.markup SET gid = ''testingbob''
        			WHERE id = md5(''testId1'')::uuid');
-SELECT is(gid, 'testingbob') FROM standoff.markup WHERE id = md5('testId1')::uuid; 
+SELECT is(gid, 'testingbob') FROM standoff.markup WHERE id = md5('testId1')::uuid;
 
 
 RESET ROLE;
@@ -99,6 +105,9 @@ SELECT is(t.local_name, 'Marker') FROM standoff.markup m, standoff.term t
 
 -- other users can also see the markup ranges with default privileges on markup.
 SELECT is(count(*)::integer, 2) FROM standoff.markup_range WHERE markup = md5('testId1')::uuid;
+
+-- Same with the view.
+SELECT is(count(*)::integer, 2) FROM standoff.markup_range_term WHERE markup = md5('testId1')::uuid;
 
 -- other users can even add markup ranges with default privileges on markup.
 SELECT lives_ok('INSERT INTO standoff.markup_range
@@ -129,8 +138,12 @@ SELECT is(privilege, 448) FROM standoff.markup WHERE document = currval('standof
 -- the owner of the markup row can still see all related markup ranges
 SELECT is(count(*)::integer, 3) FROM standoff.markup_range WHERE markup = md5('testId1')::uuid;
 
+-- Same with the view.
+SELECT is(count(*)::integer, 3) FROM standoff.markup_range_term WHERE markup = md5('testId1')::uuid;
+
 -- the following is used below. Here we only assert that it works.
 SELECT is(count(t.local_name)::integer, 1) FROM standoff.markup_range r, standoff.markup m, standoff.term t WHERE r.id = md5('testId1.3')::uuid AND r.markup = m.id AND t.id = m.term; 
+
 
 RESET ROLE;
 SET ROLE testingdan;
@@ -144,9 +157,17 @@ SELECT is(count(*)::integer, 0) FROM standoff.markup m WHERE m.document = currva
 -- are always selectable.
 SELECT is(count(*)::integer, 1) FROM standoff.markup_range WHERE markup = md5('testId1')::uuid;
 
+-- Same on the markup_range_term view.
+SELECT is(count(*)::integer, 1) FROM standoff.markup_range_term WHERE markup = md5('testId1')::uuid;
+
 -- He really can see no term.
 SELECT is(count(t.local_name)::integer, 0) FROM standoff.markup_range r, standoff.markup m, standoff.term t WHERE r.id = md5('testId1.3')::uuid AND r.markup = m.id AND t.id = m.term; 
 
+-- Due to the fact that a view is called with the permissions of its
+-- creator, the term is accessible through the markup_range_term: Do
+-- we want that?
+SELECT todo(1, 'FIXME: But the term is still present through the view.');
+SELECT isnt(local_name, 'Marker') FROM standoff.markup_range_term WHERE id = md5('testId1.3')::uuid;
 
 RESET ROLE;
 SET ROLE testingtom;
@@ -154,8 +175,12 @@ SET ROLE testingtom;
 -- Even group members can neither see bob's markup ...
 SELECT is(count(*)::integer, 0) FROM standoff.markup m WHERE m.document = currval('standoff.document_id_seq');
 
--- ... nor his ranges.
+-- ... nor his ranges ...
 SELECT is(count(*)::integer, 0) FROM standoff.markup_range WHERE markup = md5('testId1')::uuid;
+
+-- ... nor rows on the markup_range_term view.
+SELECT is(count(*)::integer, 0) FROM standoff.markup_range_term WHERE markup = md5('testId1')::uuid;
+
 
 
 RESET ROLE;
@@ -168,8 +193,14 @@ SELECT lives_ok('UPDATE standoff.markup SET privilege = 390 WHERE document = cur
 RESET ROLE;
 SET ROLE testingdan;
 
--- Now other users can see testingbob's markup.
+-- Now other users can see testingbob's markup ...
 SELECT is(count(*)::integer, 1) FROM standoff.markup m WHERE m.document = currval('standoff.document_id_seq');
+
+-- ... and the ranges.
+SELECT is(count(*)::integer, 3) FROM standoff.markup_range WHERE markup = md5('testId1')::uuid;
+
+-- Same on the markup_range_term view.
+SELECT is(count(*)::integer, 3) FROM standoff.markup_range_term WHERE markup = md5('testId1')::uuid;
 
 -- Now others can even update it.
 SELECT lives_ok('UPDATE standoff.markup SET term = currval(''standoff.term_id_seq'')-3');
@@ -208,6 +239,9 @@ SELECT is(count(*)::integer, 1) FROM standoff.markup m WHERE m.document = currva
 -- ... and his ranges, too.
 SELECT is(count(*)::integer, 3) FROM standoff.markup_range WHERE markup = md5('testId1')::uuid;
 
+-- Same on the view markup_range_term.
+SELECT is(count(*)::integer, 3) FROM standoff.markup_range_term WHERE markup = md5('testId1')::uuid;
+
 -- Now others can even update it.
 SELECT lives_ok('UPDATE standoff.markup SET term = currval(''standoff.term_id_seq'')-3');
 
@@ -243,6 +277,16 @@ SET ROLE testingtom;
 SELECT lives_ok('INSERT INTO standoff.markup_range
        		 	(document, markup, id, text_range, source_range) VALUES
 			(currval(''standoff.document_id_seq''), md5(''testId1'')::uuid, md5(''testId1.4'')::uuid, ''[086, 099]'', ''[186, 199]'')');
+
+
+-- The markup_range_term view:
+
+-- The view is only accessable by editors. Allowing access by public
+-- or standoffeditor would break security policies.
+
+-- SELECT table_privs_are('standoff', 'markup_range_term', 'public', ARRAY[]::varchar[]);
+-- SELECT table_privs_are('standoff', 'markup_range_term', 'standoffuser', ARRAY[]::varchar[]);
+-- SELECT table_privs_are('standoff', 'markup_range_term', 'standoffeditor', ARRAY['SELECT']);
 
 
 
