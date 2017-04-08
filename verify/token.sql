@@ -7,6 +7,7 @@ SELECT (document_id,
        text_range,
        number,
        token,
+       sentence,
        lemma)
        FROM standoff.token WHERE FALSE;
 

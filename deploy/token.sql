@@ -8,8 +8,10 @@ BEGIN;
 CREATE TABLE IF NOT EXISTS standoff.token (
        number integer not null, -- part of the PK, set by application
        token text not null,     -- word form
+       sentence integer,        -- reference (part) to sentence
        lemma text,              -- normalized word form
-       PRIMARY KEY (document_id, number))
+       PRIMARY KEY (document_id, number)
+       FOREIGN KEY  (document_id, sentence) REFERENCES standoff.sentence (document_id, number))
        INHERITS (standoff.document_range);
 
 -- Insertion, update and deletion of tokens is a very sensitive
