@@ -16,8 +16,15 @@ CREATE TABLE IF NOT EXISTS standoff.token (
        text_end integer,        -- end character offset
        PRIMARY KEY (document, number));
 
-GRANT SELECT, INSERT ON TABLE standoff.token TO standoffuser, standoffeditor, standoffadmin;
-GRANT DELETE, UPDATE ON TABLE standoff.token TO standoffeditor, standoffadmin;
+-- Insertion, update and deletion of tokens is a very sensitive
+-- task. We only allow it to editors and admins. In a database where
+-- signup is open to the world and everyone can become a standoffuser,
+-- every one could sabotage text mining by adding arbitrary tokens if
+-- insertion was allowed to normal users.
+
+GRANT SELECT ON TABLE standoff.token TO standoffuser;
+
+GRANT SELECT, INSERT, DELETE, UPDATE ON TABLE standoff.token TO standoffeditor, standoffadmin;
 
 
 -- Deletion is done by triggers, not by cascading deletion on deletion

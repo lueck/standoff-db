@@ -12,9 +12,11 @@ SELECT (document,
        text_end)
        FROM standoff.token WHERE FALSE;
 
-SELECT has_table_privilege('standoffuser', 'standoff.token', 'SELECT, INSERT');
-SELECT has_table_privilege('standoffeditor', 'standoff.token', 'SELECT, INSERT, UPDATE, DELETE');
-SELECT has_table_privilege('standoffadmin', 'standoff.token', 'SELECT, INSERT, UPDATE, DELETE');
+SELECT 1/has_table_privilege('standoffuser', 'standoff.token', 'SELECT')::integer;
+SELECT 1/has_table_privilege('standoffeditor', 'standoff.token', 'SELECT, INSERT, UPDATE, DELETE')::integer;
+SELECT 1/has_table_privilege('standoffadmin', 'standoff.token', 'SELECT, INSERT, UPDATE, DELETE')::integer;
+
+SELECT 1/(has_table_privilege('standoffuser', 'standoff.token', 'INSERT, UPDATE, DELETE')::integer - 1);
 
 SELECT 1/count(tgname) FROM pg_trigger t
        WHERE NOT tgisinternal
