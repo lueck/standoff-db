@@ -1,6 +1,6 @@
 -- Start transaction and plan the tests
 BEGIN;
-SELECT plan(11);
+SELECT plan(13);
 
 -- First add mimetypes
 SELECT lives_ok('INSERT INTO standoff.mimetype (id) VALUES
@@ -25,10 +25,23 @@ SELECT lives_ok('INSERT INTO standoff.document
 			 encode(''Hallo Welt. Grüße!'', ''base64''),
 			 ''text/plaintext'')');
 
-SELECT todo(3, 'RLS breaks creation of rows in corpus_documents by triggers.');
-
 SELECT is(count(*)::integer, 2) FROM standoff.corpus_document
        WHERE document = currval('standoff.document_id_seq');
+
+-- the privilege of the document corpus is 444. So one can't update or
+-- insert documents.
+SELECT is(c.privilege, 292) FROM standoff.corpus c, standoff.corpus_document cd
+       WHERE cd.corpus = c.id
+       AND cd.document = currval('standoff.document_id_seq')
+       AND c.corpus_type = 'document'::standoff.corpus_types;
+
+-- The creator of the corpus is the definer of the trigger.
+SELECT isnt(c.created_by, 'standoffuser'::varchar) FROM standoff.corpus c, standoff.corpus_document cd
+       WHERE cd.corpus = c.id
+       AND cd.document = currval('standoff.document_id_seq')
+       AND c.corpus_type = 'document'::standoff.corpus_types;
+
+SET ROLE standoffuser;
 
 SELECT is(count(*)::integer, 1) FROM standoff.corpus_document cd, standoff.corpus c
        WHERE cd.document = currval('standoff.document_id_seq')
@@ -49,8 +62,6 @@ SELECT lives_ok('INSERT INTO standoff.document
 			 ''text/plaintext'')');
 
 -- We can't add a document to a document corpus.
-
-SELECT todo(2, 'RLS breaks creation of rows in corpus_documents by triggers.');
 
 -- Try to add document 1 corpus for second document 
 SELECT throws_ok('INSERT INTO standoff.corpus_document

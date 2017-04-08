@@ -2,6 +2,9 @@
 
 BEGIN;
 
+
+DROP POLICY IF EXISTS select_global_corpus ON standoff.corpus_document;
+DROP POLICY IF EXISTS select_document_corpus ON standoff.corpus_document;
 DROP POLICY IF EXISTS rowcreator_select ON standoff.corpus_document;
 DROP POLICY IF EXISTS creator_select ON standoff.corpus_document;
 DROP POLICY IF EXISTS creator_insert ON standoff.corpus_document;
@@ -13,8 +16,6 @@ DROP POLICY IF EXISTS others_select ON standoff.corpus_document;
 DROP POLICY IF EXISTS others_insert ON standoff.corpus_document;
 DROP POLICY IF EXISTS others_delete ON standoff.corpus_document;
 DROP POLICY IF EXISTS standoffeditor_all ON standoff.corpus_document;
-
-DROP POLICY IF EXISTS debug ON standoff.corpus_document;
 
 DROP TRIGGER create_document_corpus ON standoff.document;
 

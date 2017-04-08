@@ -120,18 +120,17 @@ CREATE TRIGGER document_corpus_size1 BEFORE INSERT ON standoff.corpus_document
 
 -- Row level security. It is done through standoff.corpus, except that
 -- creators of rows in standoff.corpus_document are allow to select.
---
--- FIXME: Something wrong with RLS. Triggers only create corpus, but
--- no corpus documents.
---ALTER TABLE standoff.corpus_document ENABLE ROW LEVEL SECURITY;
+ALTER TABLE standoff.corpus_document ENABLE ROW LEVEL SECURITY;
 
+-- Allow select on global corpus
+CREATE POLICY select_global_corpus ON standoff.corpus_document FOR SELECT
+USING ((SELECT c.corpus_type FROM standoff.corpus c WHERE c.id = corpus) = 'global'::standoff.corpus_types);
 
--- CREATE POLICY debug ON standoff.corpus_document FOR INSERT TO standoffuser
--- WITH CHECK (true);--created_by = current_user OR created_by is null);
-
+-- Allow select on all document corpora
+CREATE POLICY select_document_corpus ON standoff.corpus_document FOR SELECT
+USING ((SELECT c.corpus_type FROM standoff.corpus c WHERE c.id = corpus) = 'document'::standoff.corpus_types);
 
 -- Allow select to creator of row in corpus_document
-
 CREATE POLICY rowcreator_select ON standoff.corpus_document FOR SELECT
 USING (created_by = current_user);
 
@@ -140,47 +139,41 @@ CREATE POLICY creator_select ON standoff.corpus_document FOR SELECT TO standoffu
 USING ((SELECT c.created_by FROM standoff.corpus c WHERE c.id = corpus) = current_user);
 
 CREATE POLICY creator_insert ON standoff.corpus_document FOR INSERT TO standoffuser
-WITH CHECK (((SELECT c.privilege FROM standoff.corpus c WHERE c.id = corpus) & 256) = 256
+WITH CHECK (((SELECT c.privilege FROM standoff.corpus c WHERE c.id = corpus) & 64) = 64
      	    AND (SELECT c.created_by FROM standoff.corpus c WHERE c.id = corpus) = current_user
      	    AND (created_by = current_user OR created_by is null));
 
 CREATE POLICY creator_delete ON standoff.corpus_document FOR DELETE TO standoffuser
-USING (((SELECT c.privilege FROM standoff.corpus c WHERE c.id = corpus) & 256) = 256
+USING (((SELECT c.privilege FROM standoff.corpus c WHERE c.id = corpus) & 64) = 64
        AND (SELECT c.created_by FROM standoff.corpus c WHERE c.id = corpus) = current_user);
 
 -- Allow select, insert and delete to group members.
 CREATE POLICY group_select ON standoff.corpus_document FOR SELECT TO standoffuser
-USING      (((SELECT c.privilege FROM standoff.corpus c WHERE c.id = corpus) & 64) = 64
+USING      (((SELECT c.privilege FROM standoff.corpus c WHERE c.id = corpus) & 32) = 32
             AND pg_has_role((SELECT c.gid FROM standoff.corpus c WHERE c.id = corpus),
 	    		    'MEMBER'));
 
 CREATE POLICY group_insert ON standoff.corpus_document FOR INSERT TO standoffuser
-WITH CHECK (((SELECT c.privilege FROM standoff.corpus c WHERE c.id = corpus) & 32) = 32
+WITH CHECK (((SELECT c.privilege FROM standoff.corpus c WHERE c.id = corpus) & 8) = 8
             AND pg_has_role((SELECT c.gid FROM standoff.corpus c WHERE c.id = corpus),
 	    		    'MEMBER')
 	    AND (created_by = current_user OR created_by is null));
 
 CREATE POLICY group_delete ON standoff.corpus_document FOR DELETE TO standoffuser
-USING      (((SELECT c.privilege FROM standoff.corpus c WHERE c.id = corpus) & 32) = 32
+USING      (((SELECT c.privilege FROM standoff.corpus c WHERE c.id = corpus) & 8) = 8
             AND pg_has_role((SELECT c.gid FROM standoff.corpus c WHERE c.id = corpus),
 	    		    'MEMBER'));
 
 -- Allow select, insert and delete to other users.
 CREATE POLICY others_select ON standoff.corpus_document FOR SELECT TO standoffuser
-USING      (((SELECT c.privilege FROM standoff.corpus c WHERE c.id = corpus) & 4) = 4
-            AND pg_has_role((SELECT c.gid FROM standoff.corpus c WHERE c.id = corpus),
-	    		    'MEMBER'));
+USING      (((SELECT c.privilege FROM standoff.corpus c WHERE c.id = corpus) & 4) = 4);
 
 CREATE POLICY others_insert ON standoff.corpus_document FOR INSERT TO standoffuser
-WITH CHECK (((SELECT c.privilege FROM standoff.corpus c WHERE c.id = corpus) & 2) = 2
-            AND pg_has_role((SELECT c.gid FROM standoff.corpus c WHERE c.id = corpus),
-	    		    'MEMBER')
+WITH CHECK (((SELECT c.privilege FROM standoff.corpus c WHERE c.id = corpus) & 1) = 1
 	    AND (created_by = current_user OR created_by is null));
 
 CREATE POLICY others_delete ON standoff.corpus_document FOR DELETE TO standoffuser
-USING      (((SELECT c.privilege FROM standoff.corpus c WHERE c.id = corpus) & 2) = 2
-            AND pg_has_role((SELECT c.gid FROM standoff.corpus c WHERE c.id = corpus),
-	    		    'MEMBER'));
+USING      (((SELECT c.privilege FROM standoff.corpus c WHERE c.id = corpus) & 1) = 1);
 
 
 -- Grant select, insert, delete to editor.
