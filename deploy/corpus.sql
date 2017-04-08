@@ -9,7 +9,7 @@
 
 BEGIN;
 
--- Note: The execution bit means that documents may be added to the
+-- Note: The execution bit x means that documents may be added to the
 -- corpus by the user, the group or others.
 
 -- We distinguish 3 types of corpus. This enables us to use the same
@@ -50,16 +50,37 @@ INSERT INTO standoff.corpus
        current_timestamp,
        current_user,
        current_user,
-       365) -- r_xr_xr_x
+       292) -- r__r__r__
        ON CONFLICT DO NOTHING;
 
-GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE standoff.corpus TO standoffuser, standoffeditor;
+-- Select is granted on every column.
+GRANT SELECT, DELETE ON TABLE standoff.corpus TO standoffuser, standoffeditor;
+
+-- Insert and update is not allowed on columns 'tokens' and
+-- 'tokens_dedupl'.
+GRANT INSERT (corpus_type, title, description, created_by, created_at, updated_by, updated_at, gid, privilege)
+ON TABLE standoff.corpus TO standoffuser, standoffeditor;
+
+GRANT UPDATE (corpus_type, title, description, created_by, created_at, updated_by, updated_at, gid, privilege)
+ON TABLE standoff.corpus TO standoffuser, standoffeditor;
 
 CREATE TRIGGER corpus_set_meta_on_insert BEFORE INSERT ON standoff.corpus
     FOR EACH ROW EXECUTE PROCEDURE standoff.set_meta_on_insert();
 
 CREATE TRIGGER corpus_set_meta_on_update BEFORE UPDATE ON standoff.corpus
     FOR EACH ROW EXECUTE PROCEDURE standoff.set_meta_on_update();
+
+
+-- Always grant read and write to owner:
+CREATE TRIGGER adjust_privilege_on_insert BEFORE INSERT ON standoff.corpus
+    FOR EACH ROW
+    WHEN (NEW.corpus_type = 'collection'::standoff.corpus_types)
+    EXECUTE PROCEDURE standoff.adjust_privilege(384); -- rw_______
+
+CREATE TRIGGER adjust_privilege_on_update BEFORE UPDATE ON standoff.corpus
+    FOR EACH ROW
+    WHEN (NEW.corpus_type = 'collection'::standoff.corpus_types)
+    EXECUTE PROCEDURE standoff.adjust_privilege(384); -- rw_______
 
 
 ALTER TABLE standoff.corpus ENABLE ROW LEVEL SECURITY;
