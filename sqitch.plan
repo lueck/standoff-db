@@ -15,6 +15,7 @@ entry_type_label [arbschema arbroles entry_type language] 2016-07-04T23:30:37Z C
 bibliography [arbschema arbroles entry_type set_meta_on_insert set_meta_on_update adjust_privilege] 2016-07-05T00:27:30Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add bibliography table.
 mimetype [arbschema arbroles application] 2016-07-09T09:17:28Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Added table of mimetypes for documents.
 document [bibliography mimetype arbschema arbroles adjust_privilege set_meta_on_insert set_meta_on_update extension] 2016-07-09T07:58:31Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Added document table.
+document_range [arbschema document] 2017-03-31T20:24:04Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add relation for a character range of a document.
 text_document [document arbschema arbroles] 2016-07-09T20:45:45Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add view for text documents.
 corpus [arbschema arbroles document adjust_privilege set_meta_on_insert set_meta_on_update extension] 2017-03-07T20:38:02Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add corpus table and triggers.
 corpus_document [document corpus] 2017-03-07T23:15:50Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add a crossing table for making a document belong to a corpus.
@@ -24,3 +25,8 @@ ontology [arbschema arbroles set_meta_on_insert adjust_privilege extension] 2016
 term [ontology arbschema arbroles application set_meta_on_update set_meta_on_insert adjust_privilege] 2016-07-11T15:23:53Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add relation for ontology resource.
 ontology_term [ontology term arbschema arbroles] 2016-07-11T21:09:39Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add view left-joining term with ontology.
 has_term_application [term application arbschema] 2017-04-06T20:56:03Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add function for testing if a term has a given application.
+markup [term ontology document document_range arbschema arbroles set_meta_on_insert set_meta_on_update adjust_privilege] 2017-04-06T08:11:10Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add a relation for markup.
+markup_range [markup document_range set_meta_on_insert set_meta_on_update adjust_privilege] 2017-04-07T18:13:27Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add relation for discontinous markup: markup range.
+markup_range_term [ontology term markup markup_range document] 2017-04-07T20:39:44Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add a view for left-joining markup_range with markup, ontology and term.
+relation [markup term arbschema set_meta_on_insert set_meta_on_update adjust_privilege] 2017-04-06T21:20:18Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add a table for relations on markup.
+attribute [markup term arbschema set_meta_on_insert set_meta_on_update adjust_privilege] 2017-04-06T21:45:36Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add relation for attributes on markup.

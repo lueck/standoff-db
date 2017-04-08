@@ -6,15 +6,11 @@
 BEGIN;
 
 CREATE TABLE IF NOT EXISTS standoff.token (
-       document integer not null references standoff.document, -- part of the PK
        number integer not null, -- part of the PK, set by application
        token text not null,     -- word form
        lemma text,              -- normalized word form
-       source_start integer,    -- start character offset regarding the document source
-       source_end integer,      -- end character offset
-       text_start integer,      -- start character offset with regrad to the text layer (cf. TCF)
-       text_end integer,        -- end character offset
-       PRIMARY KEY (document, number));
+       PRIMARY KEY (document, number))
+       INHERITS (standoff.document_range);
 
 -- Insertion, update and deletion of tokens is a very sensitive
 -- task. We only allow it to editors and admins. In a database where
