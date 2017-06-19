@@ -2,7 +2,7 @@
 
 BEGIN;
 
-SELECT (id,
+SELECT (bibliography_id,
        entry_key,
        entry_type,
        created_at,

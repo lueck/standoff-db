@@ -52,13 +52,13 @@ SELECT throws_ok('UPDATE standoff.corpus SET tokens_dedupl = 23
 
 -- Likewise it is not allowed to set these columns on insert.
 
-SELECT throws_ok('INSERT INTO standoff.corpus 
+SELECT throws_ok('INSERT INTO standoff.corpus
        			(corpus_type, title, tokens, created_at, created_by, privilege)
 			VALUES (''collection'', ''Medical science'', 23, current_timestamp, current_user, 365)',
 		 '42501',
 		 'permission denied for relation corpus');
 
-SELECT throws_ok('INSERT INTO standoff.corpus 
+SELECT throws_ok('INSERT INTO standoff.corpus
        			(corpus_type, title, tokens_dedupl, created_at, created_by, privilege)
 			VALUES (''collection'', ''Medical science'', 23, current_timestamp, current_user, 365)',
 		 '42501',

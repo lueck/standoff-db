@@ -2,6 +2,6 @@
 
 BEGIN;
 
-SELECT (id) FROM standoff.language WHERE FALSE;
+SELECT (language) FROM standoff.language WHERE FALSE;
 
 ROLLBACK;

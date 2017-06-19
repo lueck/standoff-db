@@ -7,7 +7,7 @@ FROM standoffuser, standoffeditor, standoffadmin;
 
 DROP INDEX standoff.markup_range_text_range_idx;
 DROP INDEX standoff.markup_range_source_range_idx;
-DROP INDEX standoff.markup_range_document_idx;
+DROP INDEX standoff.markup_range_document_id_idx;
 
 DROP POLICY IF EXISTS allow_insert_to_owner ON standoff.markup_range;
 DROP POLICY IF EXISTS allow_insert_to_group_member ON standoff.markup_range;

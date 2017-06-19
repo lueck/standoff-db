@@ -6,7 +6,7 @@ SELECT plan(1);
 SELECT indexes_are('standoff', 'document_range',
        ARRAY['document_range_text_range_idx',
              'document_range_source_range_idx',
-	     'document_range_document_idx']);
+	     'document_range_document_id_idx']);
 
 -- Finish the tests and clean up.
 SELECT finish();

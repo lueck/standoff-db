@@ -12,8 +12,8 @@ SELECT lives_ok('INSERT INTO standoff.ontology (iri, version_info) VALUES
 
 
 SELECT lives_ok('INSERT INTO standoff.term
-       			(ontology, local_name) VALUES
-			(currval(''standoff.ontology_id_seq''), ''Beispiel'')');
+       			(ontology_id, local_name) VALUES
+			(currval(''standoff.ontology_ontology_id_seq''), ''Beispiel'')');
 
 
 -- unique combination of namespace and version_info
@@ -22,8 +22,8 @@ SELECT throws_ok('INSERT INTO standoff.ontology (iri, version_info) VALUES
 
 -- unique local_name in ontology
 SELECT throws_ok('INSERT INTO standoff.term
-       			(ontology, local_name) VALUES
-			(currval(''standoff.ontology_id_seq''), ''Beispiel'')');
+       			(ontology_id, local_name) VALUES
+			(currval(''standoff.ontology_ontology_id_seq''), ''Beispiel'')');
 
 
 SELECT lives_ok('INSERT INTO standoff.ontology (iri, version_info) VALUES
@@ -31,20 +31,20 @@ SELECT lives_ok('INSERT INTO standoff.ontology (iri, version_info) VALUES
 
 
 SELECT lives_ok('INSERT INTO standoff.term
-       			(ontology, local_name) VALUES
-			(currval(''standoff.ontology_id_seq''), ''Beispiel'')');
+       			(ontology_id, local_name) VALUES
+			(currval(''standoff.ontology_ontology_id_seq''), ''Beispiel'')');
 
 SELECT lives_ok('INSERT INTO standoff.term
-       			(ontology, local_name) VALUES
-			(currval(''standoff.ontology_id_seq''), ''Konzept'')');
+       			(ontology_id, local_name) VALUES
+			(currval(''standoff.ontology_ontology_id_seq''), ''Konzept'')');
 
 
 SELECT is(version_info, 'v0.3') FROM standoff.ontology o, standoff.term r
-       WHERE r.local_name = 'Konzept' AND r.ontology = o.id;
+       WHERE r.local_name = 'Konzept' AND r.ontology_id = o.ontology_id;
 
 
 SELECT set_eq('SELECT version_info FROM standoff.ontology o, standoff.term r
-       		      WHERE r.local_name = ''Beispiel'' AND r.ontology = o.id',
+       		      WHERE r.local_name = ''Beispiel'' AND r.ontology_id = o.ontology_id',
 	      ARRAY['v0.3', 'v0.2']) ;
 
 
@@ -85,14 +85,14 @@ SELECT is(prefixed_name, 'arb:Konzept')
 -- has the application column set to a given value.
 
 SELECT isnt(standoff.has_term_application(
-       (SELECT currval('standoff.term_id_seq')::int),
+       (SELECT currval('standoff.term_term_id_seq')::int),
        'markup'::varchar),
        true);
 
 SELECT lives_ok('UPDATE standoff.term SET application = ''markup''');
 
 SELECT is(standoff.has_term_application(
-       (SELECT currval('standoff.term_id_seq')::int),
+       (SELECT currval('standoff.term_term_id_seq')::int),
        'markup'::varchar),
        true);
 

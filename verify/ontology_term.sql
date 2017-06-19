@@ -2,7 +2,7 @@
 
 BEGIN;
 
-SELECT (id, iri, version_iri, local_name, namespace_delimiter, qualified_name, prefix, prefixed_name, created_at, created_by, updated_at, updated_by, gid, privilege)
+SELECT (term_id, ontology_id, iri, version_iri, local_name, namespace_delimiter, qualified_name, prefix, prefixed_name, created_at, created_by, updated_at, updated_by, gid, privilege)
        FROM standoff.ontology_term WHERE FALSE;
 
 

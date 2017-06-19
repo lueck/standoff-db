@@ -11,9 +11,9 @@ BEGIN;
 
 -- A term is a class, property etc. defined in an ontology.
 CREATE TABLE IF NOT EXISTS standoff.term (
-	id serial not null,           -- integer ID
+	term_id serial not null,      -- integer ID
 	local_name varchar not null,  -- local part of the qualified name of the term
-	ontology integer not null references standoff.ontology, -- relation to ontology
+	ontology_id integer not null references standoff.ontology, -- relation to ontology
 	application varchar references standoff.application,  -- whether it's markup, relation, attribute etc.
 	created_at timestamp not null DEFAULT current_timestamp,
 	created_by varchar not null,
@@ -22,15 +22,15 @@ CREATE TABLE IF NOT EXISTS standoff.term (
 	-- FIXME: better use gid and privilege from ontology
 	gid varchar null,
 	privilege integer not null DEFAULT 292, -- #o444
-	PRIMARY KEY (id),
-	UNIQUE (ontology, local_name));
+	PRIMARY KEY (term_id),
+	UNIQUE (ontology_id, local_name));
 
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE standoff.term
       TO standoffuser, standoffeditor, standoffadmin;
 
 
-GRANT SELECT, USAGE ON SEQUENCE standoff.term_id_seq
+GRANT SELECT, USAGE ON SEQUENCE standoff.term_term_id_seq
       TO standoffuser, standoffeditor, standoffadmin;
 
 

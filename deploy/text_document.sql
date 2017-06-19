@@ -7,8 +7,8 @@ BEGIN;
 
 CREATE VIEW standoff.text_document AS
        SELECT
-	d.id,
-	d.reference,
+	d.document_id,
+	d.bibliography_id,
 	d.source_md5,
 	d.source_base64,
 	d.source_uri,
@@ -31,12 +31,12 @@ GRANT INSERT, SELECT, UPDATE, DELETE ON standoff.text_document TO standoffuser, 
 CREATE FUNCTION standoff.insert_text_document() RETURNS TRIGGER AS $$
 BEGIN
 	INSERT INTO standoff.document
-	       (reference, source_md5, source_base64, source_uri, source_charset,
+	       (bibliography_id, source_md5, source_base64, source_uri, source_charset,
 	       	mimetype, description, plaintext,
 		created_at, created_by, updated_at, updated_by,
 		gid, privilege)
 		VALUES 
-	       (NEW.reference,
+	       (NEW.bibliography_id,
 		md5(NEW.text)::uuid,
 		encode(NEW.text::bytea, 'base64'),
 		NEW.source_uri,

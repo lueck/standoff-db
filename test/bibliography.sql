@@ -7,10 +7,10 @@ SET search_path TO standoff, public;
 SELECT has_table('bibliography');
 SELECT has_pk('bibliography');
 
-SELECT has_column('bibliography', 'id');
-SELECT col_type_is('bibliography', 'id', 'uuid');
-SELECT col_has_default('bibliography', 'id');
-SELECT col_is_pk('bibliography', 'id');
+SELECT has_column('bibliography', 'bibliography_id');
+SELECT col_type_is('bibliography', 'bibliography_id', 'uuid');
+SELECT col_has_default('bibliography', 'bibliography_id');
+SELECT col_is_pk('bibliography', 'bibliography_id');
 
 SELECT has_column('bibliography', 'entry_key');
 SELECT col_type_is('bibliography', 'entry_key', 'character varying(1023)');

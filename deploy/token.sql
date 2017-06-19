@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS standoff.token (
        number integer not null, -- part of the PK, set by application
        token text not null,     -- word form
        lemma text,              -- normalized word form
-       PRIMARY KEY (document, number))
+       PRIMARY KEY (document_id, number))
        INHERITS (standoff.document_range);
 
 -- Insertion, update and deletion of tokens is a very sensitive
@@ -31,7 +31,7 @@ CREATE OR REPLACE FUNCTION standoff.delete_token()
        RETURNS TRIGGER AS $$
        BEGIN
        DELETE FROM standoff.token
-       WHERE document = OLD.id;
+       WHERE document_id = OLD.document_id;
        RETURN OLD;
        END;
        $$ LANGUAGE plpgsql

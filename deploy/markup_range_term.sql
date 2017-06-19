@@ -9,10 +9,10 @@ BEGIN;
 
 CREATE OR REPLACE VIEW standoff.markup_range_term WITH (security_barrier) AS
        SELECT
-       r.id,
-       r.markup,
-       r.document,
-       m.term,
+       r.markup_range_id,
+       r.markup_id,
+       r.document_id,
+       m.term_id,
        t.local_name,
        o.iri||o.namespace_delimiter||t.local_name AS qualified_name,
        o.prefix,
@@ -24,9 +24,9 @@ CREATE OR REPLACE VIEW standoff.markup_range_term WITH (security_barrier) AS
        r.updated_by,
        r.updated_at
        FROM standoff.markup_range r
-       LEFT JOIN standoff.markup m ON m.id = r.markup
-       LEFT JOIN standoff.term t ON t.id = m.term
-       LEFT JOIN standoff.ontology o ON o.id = t.ontology
+       LEFT JOIN standoff.markup m USING (markup_id) -- ON m.markup_id = r.markup_id
+       LEFT JOIN standoff.term t USING (term_id) -- ON t.term_id = m.term_id
+       LEFT JOIN standoff.ontology o USING (ontology_id) -- ON o.ontology_id = t.ontology_id
        -- Views are accessed with the permission of the its
        -- creator. So RLS is bypassed and we have to mimic it.
        WHERE m.created_by = current_user    -- allow owner of markup

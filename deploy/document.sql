@@ -14,8 +14,8 @@
 BEGIN;
 
 CREATE TABLE IF NOT EXISTS standoff.document (
-	id serial not null,
-	reference uuid references standoff.bibliography, -- may be null!
+	document_id serial not null,
+	bibliography_id uuid references standoff.bibliography, -- may be null!
 	source_md5 uuid not null,
 	source_base64 text not null,
 	source_uri varchar,
@@ -34,17 +34,17 @@ CREATE TABLE IF NOT EXISTS standoff.document (
         updated_by varchar,
         gid varchar,
         privilege integer not null DEFAULT 365,
-	PRIMARY KEY (id),
+	PRIMARY KEY (document_id),
 	UNIQUE (source_md5));
 
 
 GRANT SELECT, INSERT, DELETE ON TABLE standoff.document TO standoffuser, standoffeditor, standoffadmin;
 
-GRANT SELECT, USAGE ON SEQUENCE standoff.document_id_seq TO standoffuser, standoffeditor, standoffadmin;
+GRANT SELECT, USAGE ON SEQUENCE standoff.document_document_id_seq TO standoffuser, standoffeditor, standoffadmin;
 
 -- UPDATE on source_base64 is not allowed to anybody, until there's a mechanism to
 -- adjust the offset pointers of markup ranges.
-GRANT UPDATE (reference, source_uri, source_charset, mimetype, description, updated_at, updated_by) ON TABLE standoff.document TO standoffeditor, standoffadmin;
+GRANT UPDATE (bibliography_id, source_uri, source_charset, mimetype, description, updated_at, updated_by) ON TABLE standoff.document TO standoffeditor, standoffadmin;
 
 
 CREATE TRIGGER document_set_meta_on_insert BEFORE INSERT ON standoff.document
@@ -83,6 +83,7 @@ CREATE FUNCTION standoff.set_document_md5() RETURNS TRIGGER AS $$
 CREATE TRIGGER set_md5_on_insert BEFORE INSERT ON standoff.document
        FOR EACH ROW EXECUTE PROCEDURE standoff.set_document_md5();
 
+-- FIXME: Do we really want an update trigger for md5 checksum? 
 CREATE TRIGGER set_md5_on_update BEFORE UPDATE ON standoff.document
        FOR EACH ROW EXECUTE PROCEDURE standoff.set_document_md5();
 

@@ -2,7 +2,7 @@
 
 BEGIN;
 
-SELECT (id, local_name, ontology, application, created_at, created_by, updated_at, updated_by, gid, privilege) FROM standoff.term WHERE FALSE;
+SELECT (term_id, local_name, ontology_id, application, created_at, created_by, updated_at, updated_by, gid, privilege) FROM standoff.term WHERE FALSE;
 
 
 SELECT 1/has_table_privilege('standoffuser', 'standoff.term', 'SELECT, INSERT, UPDATE, DELETE')::integer;

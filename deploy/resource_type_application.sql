@@ -5,6 +5,7 @@
 
 BEGIN;
 
+-- FIXME: observe naming conventions
 CREATE TABLE IF NOT EXISTS standoff.resource_type_application (
 	qualified_name varchar not null,
 	application varchar not null references standoff.application,

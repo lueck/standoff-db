@@ -5,8 +5,8 @@
 BEGIN;
 
 CREATE TABLE standoff.language (
-       id varchar not null, -- abbrev: like en, de, fr
-       PRIMARY KEY (id));
+       language varchar not null, -- abbrev: like en, de, fr
+       PRIMARY KEY (language));
 
 INSERT INTO standoff.language VALUES
        ('en'),

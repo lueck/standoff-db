@@ -11,7 +11,7 @@ BEGIN;
 -- Note: 0o775 = 509 same as rwxrwxr_x
 
 CREATE TABLE IF NOT EXISTS standoff.bibliography (
-        id uuid not null DEFAULT uuid_generate_v1(),
+        bibliography_id uuid not null DEFAULT uuid_generate_v1(),
         entry_key varchar(1023) not null,
         entry_type varchar(20) not null references standoff.entry_type,
         created_at timestamp not null,
@@ -21,7 +21,7 @@ CREATE TABLE IF NOT EXISTS standoff.bibliography (
         gid varchar,
         privilege integer not null DEFAULT 509,
         UNIQUE (entry_key),
-        PRIMARY KEY (id));
+        PRIMARY KEY (bibliography_id));
 
 GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE standoff.bibliography TO standoffuser, standoffeditor;
 

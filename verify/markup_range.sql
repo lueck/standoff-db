@@ -2,8 +2,8 @@
 
 BEGIN;
 
-SELECT (document, text_range, source_range,
-       id, markup,
+SELECT (document_id, text_range, source_range,
+       markup_range_id, markup_id,
        created_at, created_by, updated_at, updated_by)
        FROM standoff.markup_range
        WHERE TRUE;

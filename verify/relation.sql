@@ -2,7 +2,7 @@
 
 BEGIN;
 
-SELECT (id, subject, predicate, object,
+SELECT (relation_id, subject, predicate, object,
        created_at, created_by, updated_at, updated_by,
        gid, privilege)
        FROM standoff.relation

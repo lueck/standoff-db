@@ -8,7 +8,7 @@ FROM standoffuser, standoffeditor, standoffadmin;
 DROP INDEX standoff.relation_subject_idx;
 DROP INDEX standoff.relation_predicate_idx;
 DROP INDEX standoff.relation_object_idx;
-DROP INDEX standoff.relation_id_idx;
+DROP INDEX standoff.relation_relation_id_idx;
 
 DROP POLICY IF EXISTS assert_well_formed ON standoff.relation;
 DROP POLICY IF EXISTS assert_well_formed_null ON standoff.relation;

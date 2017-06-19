@@ -8,10 +8,10 @@ BEGIN;
 
 CREATE TABLE IF NOT EXISTS standoff.token_frequency (
        id serial not null primary key,
-       corpus integer not null references standoff.corpus ON DELETE CASCADE,
+       corpus_id integer not null references standoff.corpus ON DELETE CASCADE,
        token text not null,
        frequency integer not null default 0,
-       UNIQUE (corpus, token));
+       UNIQUE (corpus_id, token));
 
 -- Only select is allowed. Insertion and deletion is completely done
 -- via triggers.
@@ -29,44 +29,44 @@ CREATE OR REPLACE FUNCTION standoff.inc_token_frequency(doc integer, tok text)
        corps integer;
        BEGIN
        -- Select the appropriate corpora and ...
-       FOR corps IN SELECT cd.corpus
+       FOR corps IN SELECT cd.corpus_id
        	   	    FROM standoff.corpus_document cd
-		    WHERE cd.document = doc
+		    WHERE cd.document_id = doc
 		    LOOP
 		    -- Increment token_dedupl where token is still
 		    -- missing.
 		    UPDATE standoff.corpus
 		    	   SET tokens_dedupl = tokens_dedupl + 1
-			   WHERE id = corps
+			   WHERE corpus_id = corps
 			   AND NOT EXISTS
 			   (SELECT *
        	     	    	    FROM standoff.token_frequency tf
 	     	    	    WHERE tf.token = tok    -- token not already present
-			    AND tf.corpus = corps); -- in corpus
+			    AND tf.corpus_id = corps); -- in corpus
 		    -- Insert token in each corpus where it is still
 		    -- missing.
-       		    INSERT INTO standoff.token_frequency (corpus, token)
+       		    INSERT INTO standoff.token_frequency (corpus_id, token)
        	      	    SELECT corps, tok
        		    WHERE NOT EXISTS
 		    	  (SELECT *
        	     	    	   FROM standoff.token_frequency tf
 	     	    	   WHERE tf.token = tok    -- token not already present
-			   AND tf.corpus = corps); -- in corpus
+			   AND tf.corpus_id = corps); -- in corpus
 		    -- Increment the count of tokens in each corpus.
 		    UPDATE standoff.corpus
 		    	   SET tokens = tokens + 1
-		    	   WHERE id = corps;
+		    	   WHERE corpus_id = corps;
 		    -- Increment the frequency of the token in each corpus.
 		    UPDATE standoff.token_frequency
 		    	   SET frequency = frequency + 1
 			   WHERE token = tok
-			   AND corpus = corps;
+			   AND corpus_id = corps;
        END LOOP;
        -- -- Increment the frequency of the token in the appropriate corpora.
        -- UPDATE standoff.token_frequency
        -- 	      SET frequency = frequency + 1
        -- 	      WHERE token = tok
-       -- 	      AND corpus IN (SELECT cd.corpus
+       -- 	      AND corpus IN (SELECT cd.corpus_id
        -- 	      	  	     FROM standoff.corpus_document cd
        -- 	     		     WHERE cd.document = doc);
        END;
@@ -78,7 +78,7 @@ CREATE OR REPLACE FUNCTION standoff.inc_token_frequency(doc integer, tok text)
 CREATE OR REPLACE FUNCTION standoff.inc_token_frequency_on_token_insert()
        RETURNS TRIGGER AS $$
        BEGIN
-       PERFORM standoff.inc_token_frequency(NEW.document::integer, NEW.token);
+       PERFORM standoff.inc_token_frequency(NEW.document_id::integer, NEW.token);
        RETURN NEW;
        END;
        $$ LANGUAGE plpgsql
@@ -96,9 +96,9 @@ CREATE OR REPLACE FUNCTION standoff.inc_token_frequency_on_corpus_document_inser
        token text;
        BEGIN
        FOR token IN SELECT t.token FROM standoff.token t
-       	   	    WHERE t.document = NEW.document
+       	   	    WHERE t.document_id = NEW.document_id
 		 LOOP
-		 PERFORM standoff.inc_token_frequency(NEW.document, token);
+		 PERFORM standoff.inc_token_frequency(NEW.document_id, token);
        END LOOP;
        RETURN NEW;
        END;
@@ -116,27 +116,27 @@ CREATE OR REPLACE FUNCTION standoff.dec_token_frequency(doc integer, tok text)
        corps integer;
        BEGIN
        -- Select the appropriate corpora and ...
-       FOR corps IN SELECT cd.corpus
+       FOR corps IN SELECT cd.corpus_id
        	   	    FROM standoff.corpus_document cd
-		    WHERE cd.document = doc
+		    WHERE cd.document_id = doc
 		    LOOP
 		    -- decrement the count of tokens in each corpus.
 		    UPDATE standoff.corpus
 		    	   SET tokens = tokens - 1
-		    	   WHERE id = corps;
+		    	   WHERE corpus_id = corps;
 		    -- decrement the frequency of the token in each corpus.
 		    UPDATE standoff.token_frequency
 		    	   SET frequency = frequency - 1
 			   WHERE token = tok
-			   AND corpus = corps;
+			   AND corpus_id = corps;
 		    -- Decrement token_dedupl if frequency equals 0 now.
 		    UPDATE standoff.corpus
 		    	   SET tokens_dedupl = tokens_dedupl - 1
-			   WHERE id = corps
+			   WHERE corpus_id = corps
 			   AND 0 = (SELECT tf.frequency
        	     	    	       	    FROM standoff.token_frequency tf
-	     	    	    	    WHERE tf.frequency = 0  -- token not already present
-			    	    AND tf.corpus = corps); -- in corpus
+	     	    	    	    WHERE tf.frequency = 0     -- token not already present
+			    	    AND tf.corpus_id = corps); -- in corpus
        END LOOP;
        -- delete token where it's frequency equals 0.
        DELETE FROM standoff.token_frequency WHERE frequency = 0;
@@ -149,7 +149,7 @@ CREATE OR REPLACE FUNCTION standoff.dec_token_frequency(doc integer, tok text)
 CREATE OR REPLACE FUNCTION standoff.dec_token_frequency_on_token_delete()
        RETURNS TRIGGER AS $$
        BEGIN
-       PERFORM standoff.dec_token_frequency(OLD.document::integer, OLD.token);
+       PERFORM standoff.dec_token_frequency(OLD.document_id::integer, OLD.token);
        RETURN OLD;
        END;
        $$ LANGUAGE plpgsql
@@ -167,9 +167,9 @@ CREATE OR REPLACE FUNCTION standoff.dec_token_frequency_on_corpus_document_delet
        token text;
        BEGIN
        FOR token IN SELECT t.token FROM standoff.token t
-       	   	    WHERE t.document = OLD.document
+       	   	    WHERE t.document_id = OLD.document_id
 		 LOOP
-		 PERFORM standoff.dec_token_frequency(OLD.document, token);
+		 PERFORM standoff.dec_token_frequency(OLD.document_id, token);
        END LOOP;
        RETURN OLD;
        END;

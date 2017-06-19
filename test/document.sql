@@ -7,12 +7,12 @@ SELECT * FROM no_plan();
 DROP TRIGGER IF EXISTS create_document_corpus ON standoff.document;
 DROP TRIGGER IF EXISTS add_document_to_global_corpus ON standoff.document;
 
-SELECT lives_ok('INSERT INTO standoff.mimetype (id) VALUES
+SELECT lives_ok('INSERT INTO standoff.mimetype (mimetype) VALUES
        			(''text/plaintext''),
 			(''application/failure'')
 			ON CONFLICT DO NOTHING');
 
-SELECT lives_ok('INSERT INTO standoff.bibliography (id, entry_key, entry_type) VALUES
+SELECT lives_ok('INSERT INTO standoff.bibliography (bibliography_id, entry_key, entry_type) VALUES
        			(md5(''bib1'')::uuid, ''bib1'', ''book'')');
 
 CREATE ROLE testingbob LOGIN;
@@ -26,7 +26,7 @@ RESET ROLE;
 SET ROLE testingbob;
 
 SELECT lives_ok('INSERT INTO standoff.document
-		 	(reference, source_base64, mimetype)
+		 	(bibliography_id, source_base64, mimetype)
 		 	VALUES
 		 	(md5(''bib1'')::uuid,
 			 encode(''Hallo Welt. Grüße!'', ''base64''),
@@ -35,7 +35,7 @@ SELECT lives_ok('INSERT INTO standoff.document
 -- the md5 hash of the content, i.e. decode(source_base64, 'base64')
 -- is unique.
 SELECT throws_ok('INSERT INTO standoff.document
-		 	 (reference, source_base64, mimetype)
+		 	 (bibliography_id, source_base64, mimetype)
 		 	 VALUES
 		 	 (md5(''bib1'')::uuid,
 			  encode(''Hallo Welt. Grüße!'', ''base64''),
@@ -45,7 +45,7 @@ SELECT throws_ok('INSERT INTO standoff.document
 
 -- trying to insert non-base64 encoded value:
 SELECT throws_ok('INSERT INTO standoff.document
-		 	 (reference, source_base64, mimetype)
+		 	 (bibliography_id, source_base64, mimetype)
 		 	 VALUES
 		 	 (md5(''bib1'')::uuid,
 			  ''BAD VALUE!'',
@@ -55,13 +55,13 @@ SELECT throws_ok('INSERT INTO standoff.document
 
 -- we can't update source_base64
 SELECT throws_ok('UPDATE standoff.document SET (source_base64) = (encode(''Changed!'', ''base64''))
-       				     WHERE id = currval(''standoff.document_id_seq'')',
+       				     WHERE document_id = currval(''standoff.document_document_id_seq'')',
 		 '42501',
 		 'permission denied for relation document');
 
 -- standoffusers can't update
 SELECT throws_ok('UPDATE standoff.document SET (source_charset) = (''utf-8'')
-       				     WHERE id = currval(''standoff.document_id_seq'')',
+       				     WHERE document_id = currval(''standoff.document_document_id_seq'')',
 		 '42501',
 		 'permission denied for relation document');
 
@@ -70,7 +70,7 @@ SET ROLE testingsid;
 
 -- standoffeditors (and standoffadmins) can update
 SELECT lives_ok('UPDATE standoff.document SET (source_charset) = (''utf-8'')
-       				     WHERE id = currval(''standoff.document_id_seq'')');
+       				     WHERE document_id = currval(''standoff.document_document_id_seq'')');
 
 
 -- Finish the tests and clean up.

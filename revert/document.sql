@@ -15,7 +15,7 @@ DROP POLICY IF EXISTS allow_delete_to_standoffeditor ON standoff.document;
 
 REVOKE ALL PRIVILEGES ON standoff.document FROM standoffuser, standoffeditor, standoffadmin;
 
-REVOKE ALL PRIVILEGES ON standoff.document_id_seq FROM standoffuser, standoffeditor, standoffadmin;
+REVOKE ALL PRIVILEGES ON standoff.document_document_id_seq FROM standoffuser, standoffeditor, standoffadmin;
 
 DROP TRIGGER document_set_meta_on_update ON standoff.document;
 

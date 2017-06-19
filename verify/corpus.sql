@@ -2,7 +2,7 @@
 
 BEGIN;
 
-SELECT (id,
+SELECT (corpus_id,
        corpus_type,
        tokens,
        tokens_dedupl,
@@ -20,9 +20,9 @@ SELECT has_table_privilege('standoffuser', 'standoff.corpus', 'SELECT, INSERT, U
 SELECT has_table_privilege('standoffeditor', 'standoff.corpus', 'SELECT, INSERT, UPDATE, DELETE');
 SELECT has_table_privilege('standoffadmin', 'standoff.corpus', 'SELECT, INSERT, UPDATE, DELETE');
 
-SELECT has_sequence_privilege('standoffuser', 'standoff.corpus_id_seq', 'SELECT, UPDATE');
-SELECT has_sequence_privilege('standoffeditor', 'standoff.corpus_id_seq', 'SELECT, UPDATE');
-SELECT has_sequence_privilege('standoffadmin', 'standoff.corpus_id_seq', 'SELECT, UPDATE');
+SELECT has_sequence_privilege('standoffuser', 'standoff.corpus_corpus_id_seq', 'SELECT, UPDATE');
+SELECT has_sequence_privilege('standoffeditor', 'standoff.corpus_corpus_id_seq', 'SELECT, UPDATE');
+SELECT has_sequence_privilege('standoffadmin', 'standoff.corpus_corpus_id_seq', 'SELECT, UPDATE');
 
 SELECT 1/count(tgname) FROM pg_trigger t
        WHERE NOT tgisinternal

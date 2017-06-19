@@ -2,8 +2,8 @@
 
 BEGIN;
 
-SELECT (corpus,
-       document,
+SELECT (corpus_id,
+       document_id,
        created_at,
        created_by)
        FROM standoff.corpus_document WHERE FALSE;

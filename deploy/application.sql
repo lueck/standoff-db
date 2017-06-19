@@ -5,11 +5,11 @@
 BEGIN;
 
 CREATE TABLE standoff.application (
-       id varchar not null,
+       application varchar not null,
        description text,
-       PRIMARY KEY (id));
+       PRIMARY KEY (application));
 
-INSERT INTO standoff.application (id, description) VALUES
+INSERT INTO standoff.application (application, description) VALUES
        ('markup', 'Markup is used to decorate a range of a document.'),
        ('relation', 'Relations are used interrelate markup.'),
        ('attribute', 'Attributes are assigned to markup.')

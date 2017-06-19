@@ -2,7 +2,7 @@
 
 BEGIN;
 
-SELECT (id, description) FROM standoff.application WHERE FALSE;
+SELECT (application, description) FROM standoff.application WHERE FALSE;
 
 SELECT has_table_privilege('standoffuser', 'standoff.application', 'SELECT');
 SELECT has_table_privilege('standoffeditor', 'standoff.application', 'SELECT');

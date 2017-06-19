@@ -2,7 +2,7 @@
 
 BEGIN;
 
-SELECT (document,
+SELECT (document_id,
        text_range,
        source_range)
        FROM standoff.document_range WHERE FALSE;

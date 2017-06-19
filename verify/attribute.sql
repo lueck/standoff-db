@@ -2,7 +2,7 @@
 
 BEGIN;
 
-SELECT (id, markup, term, val,
+SELECT (attribute_id, markup_id, term_id, val,
        created_at, created_by, updated_at, updated_by,
        gid, privilege)
        FROM standoff.attribute

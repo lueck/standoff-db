@@ -2,8 +2,8 @@
 
 BEGIN;
 
-SELECT (document,
-       id, term, internalized,
+SELECT (document_id,
+       markup_id, term_id, internalized,
        created_at, created_by, updated_at, updated_by,
        gid, privilege)
        FROM standoff.markup

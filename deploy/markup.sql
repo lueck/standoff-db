@@ -11,9 +11,9 @@
 BEGIN;
 
 CREATE TABLE IF NOT EXISTS standoff.markup (
-       id uuid not null DEFAULT uuid_generate_v1(),
-       document int not null references standoff.document,
-       term int not null references standoff.term,
+       markup_id uuid not null DEFAULT uuid_generate_v1(),
+       document_id int not null references standoff.document,
+       term_id int not null references standoff.term,
        internalized boolean not null DEFAULT false,
        created_at timestamp not null,
        created_by varchar not null,
@@ -21,14 +21,14 @@ CREATE TABLE IF NOT EXISTS standoff.markup (
        updated_by varchar,
        gid varchar,
        privilege integer not null DEFAULT 493, -- #o755: rwxr_xr_x
-       PRIMARY KEY (id),
-       CONSTRAINT markup_term CHECK (standoff.has_term_application(term, 'markup'::varchar)));
+       PRIMARY KEY (markup_id),
+       CONSTRAINT markup_term CHECK (standoff.has_term_application(term_id, 'markup'::varchar)));
 
-CREATE INDEX IF NOT EXISTS markup_document_idx
-ON standoff.markup (document);
+CREATE INDEX IF NOT EXISTS markup_document_id_idx
+ON standoff.markup (document_id);
 
-CREATE INDEX IF NOT EXISTS markup_term_idx
-ON standoff.markup (term);
+CREATE INDEX IF NOT EXISTS markup_term_id_idx
+ON standoff.markup (term_id);
 
 CREATE INDEX IF NOT EXISTS markup_internalized_idx
 ON standoff.markup (internalized);

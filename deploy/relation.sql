@@ -9,7 +9,7 @@
 BEGIN;
 
 CREATE TABLE IF NOT EXISTS standoff.relation (
-       id uuid not null DEFAULT uuid_generate_v1(),
+       relation_id uuid not null DEFAULT uuid_generate_v1(),
        subject uuid not null references standoff.markup,
        predicate int not null references standoff.term,
        object uuid not null references standoff.markup,
@@ -19,7 +19,7 @@ CREATE TABLE IF NOT EXISTS standoff.relation (
        updated_by varchar,
        gid varchar,
        privilege integer not null DEFAULT 493, -- #o755: rwxr_xr_x
-       PRIMARY KEY (id),
+       PRIMARY KEY (relation_id),
        UNIQUE (subject, predicate, object),
        CONSTRAINT relation_predicate_term CHECK (standoff.has_term_application(predicate, 'relation'::varchar)));
 
@@ -32,8 +32,8 @@ ON standoff.relation (predicate);
 CREATE INDEX IF NOT EXISTS relation_object_idx
 ON standoff.relation (object);
 
-CREATE INDEX IF NOT EXISTS relation_id_idx
-ON standoff.relation (id);
+CREATE INDEX IF NOT EXISTS relation_relation_id_idx
+ON standoff.relation (relation_id);
 
 
 GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE standoff.relation

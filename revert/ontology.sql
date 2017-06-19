@@ -11,7 +11,7 @@ DROP TRIGGER adjust_privilege_on_update ON standoff.ontology;
 REVOKE ALL PRIVILEGES ON TABLE standoff.ontology
        FROM standoffuser, standoffeditor, standoffadmin;
 
-REVOKE ALL PRIVILEGES ON SEQUENCE standoff.ontology_id_seq
+REVOKE ALL PRIVILEGES ON SEQUENCE standoff.ontology_ontology_id_seq
        FROM standoffuser, standoffeditor, standoffadmin;
 
 DROP TABLE standoff.ontology;

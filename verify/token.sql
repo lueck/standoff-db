@@ -2,7 +2,7 @@
 
 BEGIN;
 
-SELECT (document,
+SELECT (document_id,
        source_range,
        text_range,
        number,

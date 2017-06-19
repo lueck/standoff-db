@@ -5,9 +5,9 @@ BEGIN;
 REVOKE ALL PRIVILEGES ON TABLE standoff.attribute
 FROM standoffuser, standoffeditor, standoffadmin;
 
-DROP INDEX standoff.attribute_markup_idx;
-DROP INDEX standoff.attribute_term_idx;
-DROP INDEX standoff.attribute_id_idx;
+DROP INDEX standoff.attribute_markup_id_idx;
+DROP INDEX standoff.attribute_term_id_idx;
+DROP INDEX standoff.attribute_attribute_id_idx;
 
 DROP POLICY IF EXISTS assert_well_formed ON standoff.attribute;
 DROP POLICY IF EXISTS assert_well_formed_null ON standoff.attribute;

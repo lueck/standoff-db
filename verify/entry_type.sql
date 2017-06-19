@@ -2,6 +2,6 @@
 
 BEGIN;
 
-SELECT (id) FROM standoff.entry_type WHERE FALSE;
+SELECT (entry_type) FROM standoff.entry_type WHERE FALSE;
 
 ROLLBACK;

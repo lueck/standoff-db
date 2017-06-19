@@ -9,9 +9,9 @@
 BEGIN;
 
 CREATE TABLE IF NOT EXISTS standoff.attribute (
-       id uuid not null DEFAULT uuid_generate_v1(),
-       markup uuid not null references standoff.markup,
-       term int not null references standoff.term,
+       attribute_id uuid not null DEFAULT uuid_generate_v1(),
+       markup_id uuid not null references standoff.markup,
+       term_id int not null references standoff.term,
        val text not null,
        created_at timestamp not null,
        created_by varchar not null,
@@ -19,17 +19,17 @@ CREATE TABLE IF NOT EXISTS standoff.attribute (
        updated_by varchar,
        gid varchar,
        privilege integer not null DEFAULT 493, -- #o755: rwxr_xr_x
-       PRIMARY KEY (id),
-       CONSTRAINT attribute_key_term CHECK (standoff.has_term_application(term, 'attribute'::varchar)));
+       PRIMARY KEY (attribute_id),
+       CONSTRAINT attribute_key_term CHECK (standoff.has_term_application(term_id, 'attribute'::varchar)));
 
-CREATE INDEX IF NOT EXISTS attribute_markup_idx
-ON standoff.attribute (markup);
+CREATE INDEX IF NOT EXISTS attribute_markup_id_idx
+ON standoff.attribute (markup_id);
 
-CREATE INDEX IF NOT EXISTS attribute_term_idx
-ON standoff.attribute (term);
+CREATE INDEX IF NOT EXISTS attribute_term_id_idx
+ON standoff.attribute (term_id);
 
-CREATE INDEX IF NOT EXISTS attribute_id_idx
-ON standoff.attribute (id);
+CREATE INDEX IF NOT EXISTS attribute_attribute_id_idx
+ON standoff.attribute (attribute_id);
 
 
 GRANT INSERT, SELECT, UPDATE, DELETE ON TABLE standoff.attribute

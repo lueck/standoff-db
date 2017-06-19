@@ -5,8 +5,8 @@
 BEGIN;
 
 CREATE TABLE IF NOT EXISTS standoff.entry_type (
-        id varchar(20) not null,
-        PRIMARY KEY (id));
+        entry_type varchar(20) not null,
+        PRIMARY KEY (entry_type));
 
 INSERT INTO standoff.entry_type VALUES
        ('article'),

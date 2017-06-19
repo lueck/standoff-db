@@ -5,9 +5,9 @@
 BEGIN;
 
 CREATE TABLE standoff.mimetype (
-       id varchar,
+       mimetype varchar,
        application varchar references standoff.application ON DELETE SET NULL,
-       PRIMARY KEY (id));
+       PRIMARY KEY (mimetype));
 
 GRANT SELECT ON TABLE standoff.mimetype TO standoffuser, standoffeditor, standoffadmin;
 

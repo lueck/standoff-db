@@ -23,7 +23,7 @@ CREATE TYPE standoff.corpus_types AS ENUM
 	);
 
 CREATE TABLE IF NOT EXISTS standoff.corpus (
-       id serial not null,
+       corpus_id serial not null,
        corpus_type standoff.corpus_types not null,
        tokens integer not null default 0,        -- count of tokens in the corpus with duplicates
        tokens_dedupl integer not null default 0, -- count of tokens without duplicates
@@ -36,11 +36,11 @@ CREATE TABLE IF NOT EXISTS standoff.corpus (
        updated_by varchar,
        gid varchar,
        privilege integer not null DEFAULT 508, -- rwxrwxr__, 0o774
-       PRIMARY KEY (id),
+       PRIMARY KEY (corpus_id),
        -- only one global corpus
        EXCLUDE (corpus_type WITH =) WHERE (corpus_type = 'global'));
 
-GRANT SELECT, USAGE ON SEQUENCE standoff.corpus_id_seq TO standoffuser, standoffeditor, standoffadmin;
+GRANT SELECT, USAGE ON SEQUENCE standoff.corpus_corpus_id_seq TO standoffuser, standoffeditor, standoffadmin;
 
 -- Insert global corpus.
 INSERT INTO standoff.corpus
@@ -81,6 +81,29 @@ CREATE TRIGGER adjust_privilege_on_update BEFORE UPDATE ON standoff.corpus
     FOR EACH ROW
     WHEN (NEW.corpus_type = 'collection'::standoff.corpus_types)
     EXECUTE PROCEDURE standoff.adjust_privilege(384); -- rw_______
+
+-- Getter functions for use in security policies. We do not have to
+-- grant to anyone.
+
+CREATE FUNCTION standoff.corpus_get_corpus_type(cid integer)
+       RETURNS standoff.corpus_types AS $$
+       SELECT corpus_type FROM standoff.corpus WHERE corpus_id = cid;
+       $$ LANGUAGE SQL;
+
+CREATE FUNCTION standoff.corpus_get_created_by(cid integer)
+       RETURNS varchar AS $$
+       SELECT created_by FROM standoff.corpus WHERE corpus_id = cid;
+       $$ LANGUAGE SQL;
+
+CREATE FUNCTION standoff.corpus_get_privilege(cid integer)
+       RETURNS integer AS $$
+       SELECT privilege FROM standoff.corpus WHERE corpus_id = cid;
+       $$ LANGUAGE SQL;
+
+CREATE FUNCTION standoff.corpus_get_gid(cid integer)
+       RETURNS varchar AS $$
+       SELECT gid FROM standoff.corpus WHERE corpus_id = cid;
+       $$ LANGUAGE SQL;
 
 
 ALTER TABLE standoff.corpus ENABLE ROW LEVEL SECURITY;

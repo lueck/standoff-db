@@ -15,7 +15,7 @@ BEGIN;
 -- https://www.w3.org/2001/sw/BestPractices/VM/http-examples/2006-01-18/#naming
 -- for best practices.
 CREATE TABLE IF NOT EXISTS standoff.ontology (
-	id serial not null,               -- integer ID
+	ontology_id serial not null,      -- integer ID
 	iri varchar not null,             -- the ontology's IRI
 	version_iri varchar,              -- the IRI with a version number
 	version_info varchar not null DEFAULT 'NO VERSION',  -- a version info
@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS standoff.ontology (
 	updated_by varchar,
 	gid varchar null,
 	privilege integer not null DEFAULT 493,
-	PRIMARY KEY (id),
+	PRIMARY KEY (ontology_id),
 	UNIQUE (iri, version_info),
 	UNIQUE (version_iri));
 
@@ -41,7 +41,7 @@ GRANT SELECT, INSERT, UPDATE, DELETE ON TABLE standoff.ontology
       TO standoffeditor, standoffadmin;
 
 
-GRANT SELECT, USAGE ON SEQUENCE standoff.ontology_id_seq TO standoffuser, standoffeditor, standoffadmin;
+GRANT SELECT, USAGE ON SEQUENCE standoff.ontology_ontology_id_seq TO standoffuser, standoffeditor, standoffadmin;
 
 
 CREATE TRIGGER set_meta_on_insert BEFORE INSERT ON standoff.ontology
