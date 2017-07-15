@@ -5,9 +5,9 @@ BEGIN;
 SELECT (document_id,
        source_range,
        text_range,
-       number,
+       token_number,
        token,
-       sentence,
+       sentence_number,
        lemma)
        FROM standoff.token WHERE FALSE;
 

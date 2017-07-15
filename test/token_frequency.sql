@@ -23,7 +23,7 @@ SELECT lives_ok('INSERT INTO standoff.corpus_document
 			 currval(''standoff.document_document_id_seq''))');
 
 SELECT lives_ok('INSERT INTO standoff.token
-       			(document_id, number, token) VALUES
+       			(document_id, token_number, token) VALUES
 			(currval(''standoff.document_document_id_seq''), 1, ''the$T''),
 			(currval(''standoff.document_document_id_seq''), 2, ''quick$T''),
 			(currval(''standoff.document_document_id_seq''), 3, ''brown$T''),
@@ -69,7 +69,7 @@ SELECT lives_ok('INSERT INTO standoff.text_document
 			''the$T blue$T house$T looks$T at$T the$T blue$T sea.$T'')');
 
 SELECT lives_ok('INSERT INTO standoff.token
-       			(document_id, number, token) VALUES
+       			(document_id, token_number, token) VALUES
 			(currval(''standoff.document_document_id_seq''), 1, ''the$T''),
 			(currval(''standoff.document_document_id_seq''), 2, ''blue$T''),
 			(currval(''standoff.document_document_id_seq''), 3, ''house$T''),

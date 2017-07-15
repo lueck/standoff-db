@@ -10,8 +10,8 @@ BEGIN;
 -- ranges, from which the text can be restored from the document.
 
 CREATE TABLE IF NOT EXISTS standoff.sentence (
-       number serial not null,
-       PRIMARY KEY (document, number))
+       sentence_number serial not null,
+       PRIMARY KEY (document_id, sentence_number))
        INHERITS (standoff.document_range);
 
 
