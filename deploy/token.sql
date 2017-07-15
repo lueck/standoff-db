@@ -10,7 +10,7 @@ CREATE TABLE IF NOT EXISTS standoff.token (
        token text not null,     -- word form
        sentence_number integer, -- reference (part) to sentence
        lemma text,              -- normalized word form
-       PRIMARY KEY (document_id, token_number)
+       PRIMARY KEY (document_id, token_number),
        FOREIGN KEY  (document_id, sentence_number) REFERENCES standoff.sentence (document_id, sentence_number))
        INHERITS (standoff.document_range);
 
