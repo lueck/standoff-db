@@ -31,3 +31,4 @@ markup_range [markup document_range set_meta_on_insert set_meta_on_update adjust
 markup_range_term [ontology term markup markup_range document] 2017-04-07T20:39:44Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add a view for left-joining markup_range with markup, ontology and term.
 relation [markup term arbschema set_meta_on_insert set_meta_on_update adjust_privilege] 2017-04-06T21:20:18Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add a table for relations on markup.
 attribute [markup term arbschema set_meta_on_insert set_meta_on_update adjust_privilege] 2017-04-06T21:45:36Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add relation for attributes on markup.
+# upd_freq_by_token [corpus_document token_frequency] 2017-10-15T18:17:12Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add triggers for updating the token frequency when a token is inserted or deleted. This is very time consuming.
