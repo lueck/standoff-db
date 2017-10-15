@@ -8,7 +8,9 @@ SELECT (document_id,
        token_number,
        token,
        sentence_number,
-       lemma)
+       lemma,
+       postag,
+       tagset)
        FROM standoff.token WHERE FALSE;
 
 SELECT 1/has_table_privilege('standoffuser', 'standoff.token', 'SELECT')::integer;
