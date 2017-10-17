@@ -2,6 +2,13 @@
 BEGIN;
 SELECT plan(38);
 
+-- Configure 'token' as update methods for token frequencies.
+CREATE OR REPLACE FUNCTION standoff.frequency_update_method()
+       RETURNS varchar(50)
+       AS 'SELECT ''token''::varchar(50);'
+       LANGUAGE SQL
+       IMMUTABLE;
+
 SELECT lives_ok('INSERT INTO standoff.mimetype (mimetype) VALUES 
        			(''text/plaintext'')
 			ON CONFLICT DO NOTHING');

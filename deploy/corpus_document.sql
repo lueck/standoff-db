@@ -86,6 +86,14 @@ CREATE OR REPLACE FUNCTION standoff.delete_document_from_corpus()
        	      WHERE c.corpus_type = 'document'
 	      AND c.corpus_id = cd.corpus_id
 	      AND cd.document_id = OLD.document_id;
+       -- unregister the document from all corpuses except the
+       -- document corpus. We need this to be deleted as last one.
+       DELETE FROM standoff.corpus_document
+       	      WHERE document_id = OLD.document_id
+	      AND corpus_id NOT IN (SELECT corpus_id FROM standoff.corpus
+	      	  	    	    WHERE corpus_type = 'document');
+       -- unregister the document form document corpus and delete the
+       -- document corpus.
        DELETE FROM standoff.corpus_document WHERE document_id = OLD.document_id;
        DELETE FROM standoff.corpus WHERE corpus_id = doc_corpus_id;
        RETURN OLD;

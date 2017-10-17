@@ -71,7 +71,9 @@ CREATE OR REPLACE FUNCTION standoff.inc_token_frequency_on_token_insert()
        SECURITY DEFINER;
 
 CREATE TRIGGER inc_token_frequency AFTER INSERT ON standoff.token
-       FOR EACH ROW EXECUTE PROCEDURE standoff.inc_token_frequency_on_token_insert();
+       FOR EACH ROW
+       WHEN (standoff.frequency_update_method() = 'token')
+       EXECUTE PROCEDURE standoff.inc_token_frequency_on_token_insert();
 
 
 -- Increment the frequency of a token on registering a document in a
@@ -92,7 +94,9 @@ CREATE OR REPLACE FUNCTION standoff.inc_token_frequency_on_corpus_document_inser
        SECURITY DEFINER;
 
 CREATE TRIGGER inc_token_frequency AFTER INSERT ON standoff.corpus_document
-       FOR EACH ROW EXECUTE PROCEDURE standoff.inc_token_frequency_on_corpus_document_insert();
+       FOR EACH ROW
+       WHEN (standoff.frequency_update_method() = 'token')
+       EXECUTE PROCEDURE standoff.inc_token_frequency_on_corpus_document_insert();
 
 
 -- Decrement the frequency of a token.
@@ -142,7 +146,9 @@ CREATE OR REPLACE FUNCTION standoff.dec_token_frequency_on_token_delete()
        SECURITY DEFINER;
 
 CREATE TRIGGER dec_token_frequency BEFORE DELETE ON standoff.token
-       FOR EACH ROW EXECUTE PROCEDURE standoff.dec_token_frequency_on_token_delete();
+       FOR EACH ROW
+       WHEN (standoff.frequency_update_method() = 'token')
+       EXECUTE PROCEDURE standoff.dec_token_frequency_on_token_delete();
 
 
 -- Decrement the frequency of a token on deregistering a document from
@@ -163,6 +169,8 @@ CREATE OR REPLACE FUNCTION standoff.dec_token_frequency_on_corpus_document_delet
        SECURITY DEFINER;
 
 CREATE TRIGGER dec_token_frequency BEFORE DELETE ON standoff.corpus_document
-       FOR EACH ROW EXECUTE PROCEDURE standoff.dec_token_frequency_on_corpus_document_delete();
+       FOR EACH ROW
+       WHEN (standoff.frequency_update_method() = 'token')
+       EXECUTE PROCEDURE standoff.dec_token_frequency_on_corpus_document_delete();
 
 COMMIT;

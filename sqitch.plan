@@ -22,6 +22,7 @@ corpus_document [document corpus] 2017-03-07T23:15:50Z Christian Lück <christia
 sentence [document arbschema arbroles document_range] 2017-04-08T19:31:26Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add a relation for sentences.
 token [document arbschema arbroles] 2017-03-07T13:35:03Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add table for TCF token layer
 token_frequency [token corpus arbschema arbroles] 2017-03-09T23:36:54Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add a table for the frequencies of the tokens of a corpus.
+frequency_update_method [arbschema arbroles] 2017-10-16T08:45:57Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add constant function for configuring which update method to use for frequencies.
 ontology [arbschema arbroles set_meta_on_insert adjust_privilege extension] 2016-07-10T21:06:06Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add ontology table.
 term [ontology arbschema arbroles application set_meta_on_update set_meta_on_insert adjust_privilege] 2016-07-11T15:23:53Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add relation for ontology resource.
 ontology_term [ontology term arbschema arbroles] 2016-07-11T21:09:39Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add view left-joining term with ontology.
@@ -31,4 +32,5 @@ markup_range [markup document_range set_meta_on_insert set_meta_on_update adjust
 markup_range_term [ontology term markup markup_range document] 2017-04-07T20:39:44Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add a view for left-joining markup_range with markup, ontology and term.
 relation [markup term arbschema set_meta_on_insert set_meta_on_update adjust_privilege] 2017-04-06T21:20:18Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add a table for relations on markup.
 attribute [markup term arbschema set_meta_on_insert set_meta_on_update adjust_privilege] 2017-04-06T21:45:36Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add relation for attributes on markup.
-# upd_freq_by_token [corpus_document token_frequency] 2017-10-15T18:17:12Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add triggers for updating the token frequency when a token is inserted or deleted. This is very time consuming.
+upd_freq_by_token [corpus_document token_frequency frequency_update_method] 2017-10-15T18:17:12Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add triggers for updating the token frequency when a token is inserted or deleted. This is very time consuming.
+upd_freq_by_docfreq [corpus_document token_frequency frequency_update_method] 2017-10-15T19:16:52Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add triggers for updating frequencies in each relevant corpus when token frequencies in document are inserted.
