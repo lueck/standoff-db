@@ -44,7 +44,7 @@ tmpfile=$(tempfile)
 
 ./mkdocrow.sh $infile > $tmpfile
 
-command="\\copy standoff.document (source_base64, mimetype, source_charset, source_uri) from '"${tmpfile}"' delimiter ',' CSV; SELECT 'The inserted document''s ID is: ' || currval('standoff.document_id_seq');";
+command="\\copy standoff.document (source_base64, mimetype, source_charset, source_uri) from '"${tmpfile}"' delimiter ',' CSV; SELECT 'The inserted document''s ID is: ' || currval('standoff.document_document_id_seq');";
 
 echo $command | psql -t $psqlopts
 

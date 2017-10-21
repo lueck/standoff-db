@@ -21,8 +21,9 @@ passed as first parameter. The path to the TCF file must be passed as
 second parameter. Subsequent parameters are passed to psql which is
 used as database client.
 
-Requirements: htcf must be installed. Its tcflayer command line
-program is used for parsing the TCF file into comma separated values.
+Requirements: htcf must be installed. Its tcftokens and tcftokens
+command line programs are used for parsing the TCF file into comma
+separated values.
 
 sed, the stream editor, must also be installed.
 
@@ -57,19 +58,50 @@ psqlopts=$@
 
 tmptokens=$(tempfile -s .csv)
 
+tmpsentences=$(tempfile -s .csv)
+
+tmptokfreqs=$(tempfile -s .csv)
+
 # We use SQL Interpolation. See psql docs. \\ is a command separator
 # like semicolon.
-textcommand="\\set txt \`tcflayer -rx ${infile}\` \\\\ UPDATE standoff.document SET plaintext = :'txt' WHERE id = ${DOCID};"
+textcommand="\\set txt \`tcflayer -rx ${infile}\` \\\\ UPDATE standoff.document SET plaintext = :'txt' WHERE document_id = ${DOCID};"
 
 # write tokens to a temporary file
-tcflayer -tp --csv-delimiter $',' ${infile} |\
+tcftokens -p --csv-delimiter $',' ${infile} |\
     sed "s/^/${DOCID},/g" > $tmptokens
 
-tokencommand="\\copy standoff.token (document, token, number, text_range, source_range) from '"$tmptokens"' delimiter ',' CSV;"
+tokencommand="\\copy standoff.token (document_id, token, token_number, text_range, source_range, postag, tagset, lemma, sentence_number) from '"$tmptokens"' WITH CSV DELIMITER ',' NULL AS '';"
 
-command="BEGIN; ${textcommand} ${tokencommand} COMMIT;"
+# write sentences to a temporary file
+tcflayer -sp --csv-delimiter $',' ${infile} |\
+    sed "s/^\"[0-9 ]*\"/${DOCID}/g" > $tmpsentences
+
+sentencecommand="\\copy standoff.sentence (document_id, sentence_number, text_range, source_range) from '"$tmpsentences"' WITH CSV DELIMITER ',' NULL AS '';"
+
+#write token frequencies to a temporary file
+corpusid=$(echo "select corpus_id from standoff.corpus_document cd left join standoff.corpus c using (corpus_id) where c.corpus_type='document' and cd.document_id=${DOCID};" | psql -tA $psqlopts)
+
+tcffreq -tv --csv-delimiter $',' ${infile} |\
+    sed "s/^/${corpusid},/g" > $tmptokfreqs 
+
+tokfreqcommand="\\copy standoff.token_frequency (corpus_id, token, frequency) from '"$tmptokfreqs"' WITH CSV DELIMITER ',' NULL AS '';"
+
+
+# do all that in a transaction
+command="BEGIN; ${textcommand} ${sentencecommand} ${tokfreqcommand} ${tokencommand} COMMIT;"
+
+#echo $command
 
 # We cannot use --command=... here. See psql docs.
-echo $command | psql $psqlopts
+# echo $command | psql $psqlopts
 
-rm $tmptokens
+psql -e ${psqlopts} <<EOF
+BEGIN;
+${textcommand}
+${sentencecommand}
+${tokfreqcommand}
+${tokencommand}
+COMMIT;
+EOF
+
+#rm $tmptokens
