@@ -21,9 +21,9 @@ passed as first parameter. The path to the TCF file must be passed as
 second parameter. Subsequent parameters are passed to psql which is
 used as database client.
 
-Requirements: htcf must be installed. Its tcftokens and tcftokens
-command line programs are used for parsing the TCF file into comma
-separated values.
+Requirements: htcf must be installed. Its tcftokens, tcftokens and
+tcffreq command line programs are used for parsing the TCF file into
+comma separated values.
 
 sed, the stream editor, must also be installed.
 
@@ -74,7 +74,7 @@ tokencommand="\\copy standoff.token (document_id, token, token_number, text_rang
 
 # write sentences to a temporary file
 tcflayer -sp --csv-delimiter $',' ${infile} |\
-    sed "s/^\"[0-9 ]*\"/${DOCID}/g" > $tmpsentences
+    sed "s/^[0-9\" ]*/${DOCID}/g" > $tmpsentences
 
 sentencecommand="\\copy standoff.sentence (document_id, sentence_number, text_range, source_range) from '"$tmpsentences"' WITH CSV DELIMITER ',' NULL AS '';"
 
@@ -88,9 +88,7 @@ tokfreqcommand="\\copy standoff.token_frequency (corpus_id, token, frequency) fr
 
 
 # do all that in a transaction
-command="BEGIN; ${textcommand} ${sentencecommand} ${tokfreqcommand} ${tokencommand} COMMIT;"
-
-#echo $command
+#command="BEGIN; ${textcommand} ${sentencecommand} ${tokfreqcommand} ${tokencommand} COMMIT;"
 
 # We cannot use --command=... here. See psql docs.
 # echo $command | psql $psqlopts
@@ -104,4 +102,6 @@ ${tokencommand}
 COMMIT;
 EOF
 
-#rm $tmptokens
+rm $tmptokens
+rm $tmpsentences
+rm $tmptokfreqs
