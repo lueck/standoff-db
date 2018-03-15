@@ -3,7 +3,7 @@
 BEGIN;
 
 SELECT (bibliography_id,
-       field_type_id,
+       field_type,
        val,
        created_at,
        created_by,

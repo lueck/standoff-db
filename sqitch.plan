@@ -37,3 +37,4 @@ upd_freq_by_docfreq [corpus_document token_frequency frequency_update_method] 20
 field_format [arbschema arbroles] 2018-03-15T08:50:39Z Christian Lück <christian.lueck@ruhr-uni-bochum.de> # Add table for the format of bibliographic field types.
 field_type [arbschema arbroles field_format] 2018-03-15T09:16:41Z Christian Lück <christian.lueck@ruhr-uni-bochum.de> # Add a table for the types of bibliographic fields.
 bibliography_field [arbschema arbroles bibliography field_type] 2018-03-15T09:34:40Z Christian Lück <christian.lueck@ruhr-uni-bochum.de> # Add a table for bibliographic fields.
+entry_type_field_type [arbschema arbroles entry_type field_type] 2018-03-15T21:53:14Z Christian Lück <christian.lueck@ruhr-uni-bochum.de> # Add relation for defining fields on a specific entry type.

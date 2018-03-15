@@ -2,7 +2,7 @@
 
 BEGIN;
 
-SELECT (field_format_id, regexp)
+SELECT (field_format, regexp)
 FROM standoff.field_format WHERE TRUE;
 
 ROLLBACK;

@@ -2,6 +2,6 @@
 
 BEGIN;
 
-SELECT (field_type_id, field_format_id) FROM standoff.field_type WHERE TRUE;
+SELECT (field_type, field_format) FROM standoff.field_type WHERE TRUE;
 
 ROLLBACK;
