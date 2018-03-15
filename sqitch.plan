@@ -1,4 +1,4 @@
-%syntax-version=1.0.0-b2
+%syntax-version=1.0.0
 %project=arb-db
 %uri=https://github.com/lueck/arb-db/
 
@@ -34,3 +34,6 @@ relation [markup term arbschema set_meta_on_insert set_meta_on_update adjust_pri
 attribute [markup term arbschema set_meta_on_insert set_meta_on_update adjust_privilege] 2017-04-06T21:45:36Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add relation for attributes on markup.
 upd_freq_by_token [corpus_document token_frequency frequency_update_method] 2017-10-15T18:17:12Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add triggers for updating the token frequency when a token is inserted or deleted. This is very time consuming.
 upd_freq_by_docfreq [corpus_document token_frequency frequency_update_method] 2017-10-15T19:16:52Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add triggers for updating frequencies in each relevant corpus when token frequencies in document are inserted.
+field_format [arbschema arbroles] 2018-03-15T08:50:39Z Christian Lück <christian.lueck@ruhr-uni-bochum.de> # Add table for the format of bibliographic field types.
+field_type [arbschema arbroles field_format] 2018-03-15T09:16:41Z Christian Lück <christian.lueck@ruhr-uni-bochum.de> # Add a table for the types of bibliographic fields.
+bibliography_field [arbschema arbroles bibliography field_type] 2018-03-15T09:34:40Z Christian Lück <christian.lueck@ruhr-uni-bochum.de> # Add a table for bibliographic fields.
