@@ -2,6 +2,9 @@
 
 BEGIN;
 
--- XXX Add DDLs here.
+REVOKE ALL PRIVILEGES ON TABLE standoff.entry_type_field_type
+FROM standoffadmin, standoffeditor, standoffuser;
+
+DROP TABLE IF EXISTS standoff.entry_type_field_type;
 
 COMMIT;
