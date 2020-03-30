@@ -24,11 +24,12 @@ text_document [document arbschema arbroles] 2016-07-09T20:45:45Z Christian Lück
 corpus [arbschema arbroles document adjust_privilege set_meta_on_insert set_meta_on_update extension] 2017-03-07T20:38:02Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add corpus table and triggers.
 corpus_document [document corpus] 2017-03-07T23:15:50Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add a crossing table for making a document belong to a corpus.
 
-## base tables for tokenized texts
+# # base tables for tokenized texts
 # sentence [document arbschema arbroles document_range] 2017-04-08T19:31:26Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add a relation for sentences.
+vocabulary [arbschema arbroles] 2020-03-30T12:35:30Z Christian Lück <christian.lueck@ruhr-uni-bochum.de> # Add table for representing tokens by integers
 token [document arbschema arbroles] 2017-03-07T13:35:03Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add table for TCF token layer
 
-## token frequency etc.
+# # token frequency etc.
 # token_frequency [token corpus arbschema arbroles] 2017-03-09T23:36:54Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add a table for the frequencies of the tokens of a corpus.
 # frequency_update_method [arbschema arbroles] 2017-10-16T08:45:57Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add constant function for configuring which update method to use for frequencies.
 # upd_freq_by_token [corpus_document token_frequency frequency_update_method] 2017-10-15T18:17:12Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add triggers for updating the token frequency when a token is inserted or deleted. This is very time consuming.

@@ -2,6 +2,7 @@
 -- requires: document
 -- requires: arbschema
 -- requires: arbroles
+-- requires: vocabulary
 
 BEGIN;
 
@@ -9,13 +10,15 @@ CREATE TABLE IF NOT EXISTS standoff.token (
        token_number integer not null, -- part of the PK, set by application
        token text not null,     -- word form
        --sentence_number integer, -- reference (part) to sentence
+       token_int integer null,  -- integer representation, not the primary key!
        sentence integer,        -- number of sentence (or other primary segementation)
        number_in_sentence integer,   -- number in sentence
        lemma text,              -- normalized word form
        postag text,             -- Part of Speach tag
        tagset text,             -- Tagset, where the POStag is selected from
-       PRIMARY KEY (document_id, token_number)--,
+       PRIMARY KEY (document_id, token_number),
        -- FOREIGN KEY  (document_id, sentence_number) REFERENCES standoff.sentence (document_id, sentence_number)
+       FOREIGN KEY (token_int) REFERENCES standoff.vocabulary(token_int)
        )
        INHERITS (standoff.document_range);
 
