@@ -10,19 +10,32 @@ set_meta_on_update [arbschema arbroles] 2016-07-04T23:12:35Z Christian Lück <ch
 adjust_privilege [arbschema arbroles] 2016-07-05T15:11:04Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add functions which help with privileges.
 application [arbschema arbroles] 2016-07-09T10:05:49Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add a table for applications (tag, relation, attribute, etc.).
 language [arbschema arbroles] 2016-07-04T23:32:05Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Added a table for languages of labels and descriptions and other purposes.
+
+# Meta data (Bibliography), base tables
 entry_type [arbschema arbroles] 2016-07-04T23:52:18Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add table for types of bibliographic entries.
 entry_type_label [arbschema arbroles entry_type language] 2016-07-04T23:30:37Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Added a table with labels and descriptions for entry types.
 bibliography [arbschema arbroles entry_type set_meta_on_insert set_meta_on_update adjust_privilege] 2016-07-05T00:27:30Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add bibliography table.
 mimetype [arbschema arbroles application] 2016-07-09T09:17:28Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Added table of mimetypes for documents.
+
+# Documents and corpora
 document [bibliography mimetype arbschema arbroles adjust_privilege set_meta_on_insert set_meta_on_update extension] 2016-07-09T07:58:31Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Added document table.
 document_range [arbschema document] 2017-03-31T20:24:04Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add relation for a character range of a document.
 text_document [document arbschema arbroles] 2016-07-09T20:45:45Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add view for text documents.
 corpus [arbschema arbroles document adjust_privilege set_meta_on_insert set_meta_on_update extension] 2017-03-07T20:38:02Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add corpus table and triggers.
 corpus_document [document corpus] 2017-03-07T23:15:50Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add a crossing table for making a document belong to a corpus.
-sentence [document arbschema arbroles document_range] 2017-04-08T19:31:26Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add a relation for sentences.
+
+## base tables for tokenized texts
+# sentence [document arbschema arbroles document_range] 2017-04-08T19:31:26Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add a relation for sentences.
 token [document arbschema arbroles] 2017-03-07T13:35:03Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add table for TCF token layer
-token_frequency [token corpus arbschema arbroles] 2017-03-09T23:36:54Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add a table for the frequencies of the tokens of a corpus.
-frequency_update_method [arbschema arbroles] 2017-10-16T08:45:57Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add constant function for configuring which update method to use for frequencies.
+
+## token frequency etc.
+# token_frequency [token corpus arbschema arbroles] 2017-03-09T23:36:54Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add a table for the frequencies of the tokens of a corpus.
+# frequency_update_method [arbschema arbroles] 2017-10-16T08:45:57Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add constant function for configuring which update method to use for frequencies.
+# upd_freq_by_token [corpus_document token_frequency frequency_update_method] 2017-10-15T18:17:12Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add triggers for updating the token frequency when a token is inserted or deleted. This is very time consuming.
+# upd_freq_by_docfreq [corpus_document token_frequency frequency_update_method] 2017-10-15T19:16:52Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add triggers for updating frequencies in each relevant corpus when token frequencies in document are inserted.
+
+
+# Stand-off Markup
 ontology [arbschema arbroles set_meta_on_insert adjust_privilege extension] 2016-07-10T21:06:06Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add ontology table.
 term [ontology arbschema arbroles application set_meta_on_update set_meta_on_insert adjust_privilege] 2016-07-11T15:23:53Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add relation for ontology resource.
 ontology_term [ontology term arbschema arbroles] 2016-07-11T21:09:39Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add view left-joining term with ontology.
@@ -32,8 +45,8 @@ markup_range [markup document_range set_meta_on_insert set_meta_on_update adjust
 markup_range_term [ontology term markup markup_range document] 2017-04-07T20:39:44Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add a view for left-joining markup_range with markup, ontology and term.
 relation [markup term arbschema set_meta_on_insert set_meta_on_update adjust_privilege] 2017-04-06T21:20:18Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add a table for relations on markup.
 attribute [markup term arbschema set_meta_on_insert set_meta_on_update adjust_privilege] 2017-04-06T21:45:36Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add relation for attributes on markup.
-upd_freq_by_token [corpus_document token_frequency frequency_update_method] 2017-10-15T18:17:12Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add triggers for updating the token frequency when a token is inserted or deleted. This is very time consuming.
-upd_freq_by_docfreq [corpus_document token_frequency frequency_update_method] 2017-10-15T19:16:52Z Christian Lück <christian.lueck@ruhr-uni-bochum.de># Add triggers for updating frequencies in each relevant corpus when token frequencies in document are inserted.
+
+# Bibtex-like bibliography implementation:
 field_format [arbschema arbroles] 2018-03-15T08:50:39Z Christian Lück <christian.lueck@ruhr-uni-bochum.de> # Add table for the format of bibliographic field types.
 field_type [arbschema arbroles field_format] 2018-03-15T09:16:41Z Christian Lück <christian.lueck@ruhr-uni-bochum.de> # Add a table for the types of bibliographic fields.
 bibliography_field [arbschema arbroles bibliography field_type] 2018-03-15T09:34:40Z Christian Lück <christian.lueck@ruhr-uni-bochum.de> # Add a table for bibliographic fields.

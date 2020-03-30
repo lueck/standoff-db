@@ -7,7 +7,9 @@ SELECT (document_id,
        text_range,
        token_number,
        token,
-       sentence_number,
+       --sentence_number,
+       sentence,
+       number_in_sentence,
        lemma,
        postag,
        tagset)
@@ -19,13 +21,13 @@ SELECT 1/has_table_privilege('standoffadmin', 'standoff.token', 'SELECT, INSERT,
 
 SELECT 1/(has_table_privilege('standoffuser', 'standoff.token', 'INSERT, UPDATE, DELETE')::integer - 1);
 
-SELECT 1/count(tgname) FROM pg_trigger t
-       WHERE NOT tgisinternal
-       AND tgrelid = 'standoff.document'::regclass
-       AND tgname = 'delete_on_document_delete';
+-- SELECT 1/count(tgname) FROM pg_trigger t
+--        WHERE NOT tgisinternal
+--        AND tgrelid = 'standoff.document'::regclass
+--        AND tgname = 'delete_on_document_delete';
 
 
-SELECT 'standoff.delete_token'::regproc;
+-- SELECT 'standoff.delete_token'::regproc;
 
 
 ROLLBACK;
