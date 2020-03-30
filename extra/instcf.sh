@@ -54,9 +54,9 @@ psqlopts=$@
 
 #echo "Options to psql: "$psqlopts
 
-tmptokens=$(tempfile -s .csv)
+tmptokens=$(mktemp --suffix=.csv)
 
-# tmptokfreqs=$(tempfile -s .csv)
+# tmptokfreqs=$(mktemp --suffix .csv)
 
 # We use SQL Interpolation. See psql docs. \\ is a command separator
 # like semicolon.

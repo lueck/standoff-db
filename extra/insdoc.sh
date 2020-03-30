@@ -40,7 +40,7 @@ psqlopts=$@
 
 #echo "Options to psql: "$psqlopts
 
-tmpfile=$(tempfile)
+tmpfile=$(mktemp --suffix=.csv)
 
 $(dirname $0)/mkdocrow.sh $infile > $tmpfile
 
